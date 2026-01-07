@@ -37,13 +37,32 @@ const Navigation = () => {
   ];
 
   return (
-    <AppBar position="static" color="default" elevation={1}>
+    <AppBar
+      position="fixed"
+      elevation={0}
+      sx={{
+        backgroundColor: 'rgba(255, 255, 255, 0.85)',
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
+      }}
+    >
       <Toolbar sx={{ maxWidth: '1280px', width: '100%', mx: 'auto', px: { xs: 2, sm: 3, lg: 4 } }}>
-        <Typography variant="h6" component="h1" sx={{ flexGrow: 1, fontWeight: 'bold' }} className="animate-fade-right duration-fast">
-          Assistente Virtual WhatsApp
+        <Typography
+          variant="h6"
+          component="h1"
+          sx={{
+            flexGrow: 1,
+            fontWeight: 'bold',
+            fontSize: { xs: '1rem', sm: '1.25rem' },
+            color: 'text.primary'
+          }}
+          className="animate-fade-right duration-fast"
+        >
+          <span className="hidden sm:inline">Assistente Virtual WhatsApp</span>
+          <span className="sm:hidden">WhatsApp Bot</span>
         </Typography>
 
-        <Box sx={{ display: 'flex', gap: 0.5 }}>
+        <Box sx={{ display: 'flex', gap: { xs: 0.5, sm: 1 } }}>
           {navItems.map((item, index) => (
             <Button
               key={item.path}
@@ -52,8 +71,14 @@ const Navigation = () => {
               variant={isActive(item.path) ? 'contained' : 'text'}
               color={isActive(item.path) ? 'primary' : 'inherit'}
               className={animationClasses[index]}
+              sx={{
+                fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                padding: { xs: '4px 8px', sm: '6px 16px' },
+                minWidth: { xs: 'auto', sm: '64px' }
+              }}
             >
-              {item.label}
+              <span className="hidden sm:inline">{item.label}</span>
+              <span className="sm:hidden sr-only">{item.label}</span>
             </Button>
           ))}
         </Box>
