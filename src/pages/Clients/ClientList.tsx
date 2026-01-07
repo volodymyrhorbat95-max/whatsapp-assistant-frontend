@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Client } from '../../types';
 import { Button } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { useTheme } from '@mui/material/styles';
 
 interface Props {
   clients: Client[];
@@ -9,6 +10,7 @@ interface Props {
 
 const ClientList = ({ clients }: Props) => {
   const navigate = useNavigate();
+  const theme = useTheme();
 
   // Button click → navigate using useNavigate (no Link/a tags per rule.txt)
   const handleConfigClick = (clientId: number) => {
@@ -56,21 +58,21 @@ const ClientList = ({ clients }: Props) => {
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
       <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
+        <thead style={{ backgroundColor: theme.palette.primary.light }}>
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: '#ffffff' }}>
               Nome do Negócio
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: '#ffffff' }}>
               Segmento
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: '#ffffff' }}>
               WhatsApp
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: '#ffffff' }}>
               Status
             </th>
-            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider" style={{ color: '#ffffff' }}>
               Ações
             </th>
           </tr>
