@@ -1,3 +1,5 @@
+import { Button, TextField, MenuItem } from '@mui/material';
+
 interface Props {
   startDate: string;
   endDate: string;
@@ -26,81 +28,71 @@ const ConversationFilters = ({
   return (
     <div className="bg-white border-b border-gray-200 p-4">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {/* Start Date */}
-        <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">
-            Data Inicial
-          </label>
-          <input
-            type="date"
-            value={startDate}
-            onChange={(e) => onStartDateChange(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+        <TextField
+          label="Data Inicial"
+          type="date"
+          value={startDate}
+          onChange={(e) => onStartDateChange(e.target.value)}
+          size="small"
+          fullWidth
+          slotProps={{ inputLabel: { shrink: true } }}
+        />
 
-        {/* End Date */}
-        <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">
-            Data Final
-          </label>
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => onEndDateChange(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+        <TextField
+          label="Data Final"
+          type="date"
+          value={endDate}
+          onChange={(e) => onEndDateChange(e.target.value)}
+          size="small"
+          fullWidth
+          slotProps={{ inputLabel: { shrink: true } }}
+        />
 
-        {/* Status */}
-        <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">
-            Status
-          </label>
-          <select
-            value={status}
-            onChange={(e) => onStatusChange(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Todos</option>
-            <option value="ongoing">Em andamento</option>
-            <option value="completed">Concluída</option>
-            <option value="abandoned">Abandonada</option>
-            <option value="transferred">Transferida</option>
-          </select>
-        </div>
+        <TextField
+          label="Status"
+          value={status}
+          onChange={(e) => onStatusChange(e.target.value)}
+          size="small"
+          fullWidth
+          select
+        >
+          <MenuItem value="">Todos</MenuItem>
+          <MenuItem value="ongoing">Em andamento</MenuItem>
+          <MenuItem value="completed">Concluída</MenuItem>
+          <MenuItem value="abandoned">Abandonada</MenuItem>
+          <MenuItem value="transferred">Transferida</MenuItem>
+        </TextField>
 
-        {/* Converted */}
-        <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">
-            Convertida
-          </label>
-          <select
-            value={converted}
-            onChange={(e) => onConvertedChange(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Todos</option>
-            <option value="true">Sim</option>
-            <option value="false">Não</option>
-          </select>
-        </div>
+        <TextField
+          label="Convertida"
+          value={converted}
+          onChange={(e) => onConvertedChange(e.target.value)}
+          size="small"
+          fullWidth
+          select
+        >
+          <MenuItem value="">Todos</MenuItem>
+          <MenuItem value="true">Sim</MenuItem>
+          <MenuItem value="false">Não</MenuItem>
+        </TextField>
       </div>
 
       {/* Action Buttons */}
       <div className="flex gap-2 mt-4">
-        <button
+        <Button
           onClick={onApply}
-          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors"
+          variant="contained"
+          size="small"
         >
           Aplicar Filtros
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={onClear}
-          className="px-4 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-300 transition-colors"
+          variant="outlined"
+          size="small"
         >
           Limpar
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Client } from '../../types';
+import { Button } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 interface Props {
   clients: Client[];
@@ -95,12 +97,13 @@ const ClientList = ({ clients }: Props) => {
                 </span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <button
+                <Button
                   onClick={() => handleConfigClick(client.id)}
-                  className="text-blue-600 hover:text-blue-900 transition-colors"
+                  variant="text"
+                  startIcon={<SettingsIcon />}
                 >
                   Editar Configurações
-                </button>
+                </Button>
               </td>
             </tr>
           ))}

@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { updateClient } from '../../store/slices/clientSlice';
 import { Client, OperatingHours } from '../../types';
+import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
 
 interface Props {
   client: Client;
@@ -69,12 +70,12 @@ const HoursEditor = ({ client }: Props) => {
           Horário de Funcionamento
         </h2>
         {hasChanges && (
-          <button
+          <Button
             onClick={handleSave}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            variant="contained"
           >
             Salvar Alterações
-          </button>
+          </Button>
         )}
       </div>
 
@@ -85,32 +86,33 @@ const HoursEditor = ({ client }: Props) => {
 
           return (
             <div key={key} className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
-              <div className="flex items-center gap-3 flex-1">
-                <input
-                  type="checkbox"
-                  checked={isEnabled}
-                  onChange={() => toggleDay(key)}
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <label className="text-sm font-medium text-gray-900 w-32">
-                  {label}
-                </label>
-              </div>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isEnabled}
+                    onChange={() => toggleDay(key)}
+                  />
+                }
+                label={label}
+                sx={{ flex: 1, minWidth: '150px' }}
+              />
 
               {isEnabled && dayHours && (
                 <div className="flex items-center gap-3">
-                  <input
+                  <TextField
                     type="time"
                     value={dayHours.open || ''}
                     onChange={(e) => updateDayHours(key, 'open', e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    size="small"
+                    slotProps={{ inputLabel: { shrink: true } }}
                   />
                   <span className="text-gray-600">às</span>
-                  <input
+                  <TextField
                     type="time"
                     value={dayHours.close || ''}
                     onChange={(e) => updateDayHours(key, 'close', e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    size="small"
+                    slotProps={{ inputLabel: { shrink: true } }}
                   />
                 </div>
               )}

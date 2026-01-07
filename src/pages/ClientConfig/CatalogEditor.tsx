@@ -5,6 +5,9 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { updateClient } from '../../store/slices/clientSlice';
 import { Client, CatalogCategory, CatalogItem } from '../../types';
+import { Button, TextField } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Props {
   client: Client;
@@ -67,12 +70,12 @@ const CatalogEditor = ({ client }: Props) => {
           Cardápio
         </h2>
         {hasChanges && (
-          <button
+          <Button
             onClick={handleSave}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            variant="contained"
           >
             Salvar Alterações
-          </button>
+          </Button>
         )}
       </div>
 
@@ -86,41 +89,48 @@ const CatalogEditor = ({ client }: Props) => {
             <div className="space-y-3">
               {category.items.map((item, itemIndex) => (
                 <div key={itemIndex} className="flex gap-3 items-start">
-                  <input
-                    type="text"
+                  <TextField
                     value={item.name}
                     onChange={(e) => updateItem(categoryIndex, itemIndex, 'name', e.target.value)}
                     placeholder="Nome do item"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    size="small"
+                    sx={{ flex: 1 }}
                   />
-                  <div className="flex items-center gap-2">
-                    <span className="text-gray-600">R$</span>
-                    <input
-                      type="number"
-                      value={item.price}
-                      onChange={(e) => updateItem(categoryIndex, itemIndex, 'price', parseFloat(e.target.value) || 0)}
-                      placeholder="0.00"
-                      step="0.01"
-                      min="0"
-                      className="w-24 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <button
+                  <TextField
+                    type="number"
+                    value={item.price}
+                    onChange={(e) => updateItem(categoryIndex, itemIndex, 'price', parseFloat(e.target.value) || 0)}
+                    placeholder="0.00"
+                    size="small"
+                    sx={{ width: '120px' }}
+                    slotProps={{
+                      input: {
+                        startAdornment: <span className="mr-1">R$</span>,
+                        inputProps: { step: '0.01', min: 0 }
+                      }
+                    }}
+                  />
+                  <Button
                     onClick={() => removeItem(categoryIndex, itemIndex)}
-                    className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    variant="outlined"
+                    color="error"
+                    size="small"
+                    startIcon={<DeleteIcon />}
                   >
                     Remover
-                  </button>
+                  </Button>
                 </div>
               ))}
             </div>
 
-            <button
+            <Button
               onClick={() => addItem(categoryIndex)}
-              className="mt-3 px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+              variant="text"
+              startIcon={<AddIcon />}
+              sx={{ mt: 2 }}
             >
-              + Adicionar Item
-            </button>
+              Adicionar Item
+            </Button>
           </div>
         ))}
       </div>

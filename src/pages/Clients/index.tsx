@@ -3,6 +3,8 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchClients } from '../../store/slices/clientSlice';
 import ClientList from './ClientList';
 import ClientForm from './ClientForm';
+import { Button } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 const ClientsPage = () => {
   const dispatch = useAppDispatch();
@@ -30,15 +32,13 @@ const ClientsPage = () => {
               {clients.length} {clients.length === 1 ? 'cliente cadastrado' : 'clientes cadastrados'}
             </p>
           </div>
-          <button
+          <Button
             onClick={() => setShowForm(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+            variant="contained"
+            startIcon={<AddIcon />}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
             Novo Cliente
-          </button>
+          </Button>
         </div>
 
         {/* Client List */}
