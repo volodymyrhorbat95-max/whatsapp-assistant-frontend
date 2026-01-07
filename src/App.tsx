@@ -1,14 +1,18 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import ConversationsPage from './pages/Conversations';
 import ClientsPage from './pages/Clients';
 import ClientConfig from './pages/ClientConfig';
 import ReportsPage from './pages/Reports';
 import GlobalSpinner from './components/GlobalSpinner';
 import Navigation from './components/Navigation';
+import theme from './theme';
 
 function App() {
   return (
-    <>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <GlobalSpinner />
       <Navigation />
       <Routes>
@@ -30,7 +34,7 @@ function App() {
         {/* 404 - redirect to clients */}
         <Route path="*" element={<Navigate to="/clients" replace />} />
       </Routes>
-    </>
+    </ThemeProvider>
   );
 }
 
