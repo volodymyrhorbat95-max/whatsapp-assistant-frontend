@@ -41,9 +41,9 @@ const Navigation = () => {
       position="fixed"
       elevation={0}
       sx={{
-        backgroundColor: 'rgba(255, 255, 255, 0.85)',
+        backgroundColor: 'rgba(66, 153, 225, 0.95)',
         backdropFilter: 'blur(10px)',
-        borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
+        borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
       }}
     >
       <Toolbar sx={{ maxWidth: '1280px', width: '100%', mx: 'auto', px: { xs: 2, sm: 3, lg: 4 } }}>
