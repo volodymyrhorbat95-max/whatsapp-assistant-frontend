@@ -25,27 +25,27 @@ const PaymentMethodsChart = ({ data }: Props) => {
   ];
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">Métodos de Pagamento</h2>
+    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+      <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 animate-fade-down duration-very-fast">Métodos de Pagamento</h2>
 
       {/* Bar Chart */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {data.map((item, index) => {
           const percentage = total > 0 ? (item.count / total) * 100 : 0;
           const color = colors[index % colors.length];
           const label = methodLabels[item.method] || item.method;
 
           return (
-            <div key={item.method}>
+            <div key={item.method} className="animate-fade-right" style={{ animationDuration: `${400 + index * 100}ms` }}>
               <div className="flex justify-between items-center mb-1">
-                <span className="text-sm font-medium text-gray-700">{label}</span>
-                <span className="text-sm text-gray-600">
+                <span className="text-xs sm:text-sm font-medium text-gray-700">{label}</span>
+                <span className="text-xs sm:text-sm text-gray-600">
                   {item.count} ({percentage.toFixed(1)}%)
                 </span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3">
+              <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
                 <div
-                  className={`${color} h-3 rounded-full transition-all duration-300`}
+                  className={`${color} h-2 sm:h-3 rounded-full transition-all duration-300`}
                   style={{ width: `${percentage}%` }}
                 />
               </div>
@@ -55,10 +55,10 @@ const PaymentMethodsChart = ({ data }: Props) => {
       </div>
 
       {/* Total */}
-      <div className="mt-4 pt-4 border-t border-gray-200">
+      <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200 animate-fade-up duration-slow">
         <div className="flex justify-between items-center">
-          <span className="text-sm font-semibold text-gray-900">Total</span>
-          <span className="text-sm font-semibold text-gray-900">{total}</span>
+          <span className="text-xs sm:text-sm font-semibold text-gray-900">Total</span>
+          <span className="text-xs sm:text-sm font-semibold text-gray-900">{total}</span>
         </div>
       </div>
     </div>

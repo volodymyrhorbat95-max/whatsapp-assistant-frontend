@@ -32,16 +32,16 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md animate-zoom-in duration-fast">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-gray-900 animate-fade-right duration-very-fast">Novo Cliente</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl p-4 sm:p-6 w-full max-w-md animate-zoom-in duration-fast">
+        <div className="flex justify-between items-center mb-4 sm:mb-6">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900 animate-fade-right duration-very-fast">Novo Cliente</h2>
           <IconButton onClick={onClose} size="small" className="animate-fade-left duration-very-fast">
             <CloseIcon />
           </IconButton>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
           <TextField
             label="Nome do Negócio"
             value={name}
@@ -50,6 +50,7 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
             fullWidth
             placeholder="Ex: Pizzaria do João"
             className="animate-fade-up duration-fast"
+            size="small"
           />
 
           <TextField
@@ -60,6 +61,7 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
             fullWidth
             select
             className="animate-fade-up duration-normal"
+            size="small"
           >
             <MenuItem value="delivery">Delivery</MenuItem>
             <MenuItem value="clothing">Vestuário</MenuItem>
@@ -74,9 +76,10 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
             placeholder="+5511999999999"
             helperText="Formato: +55 + DDD + Número (sem espaços)"
             className="animate-fade-up duration-light-slow"
+            size="small"
           />
 
-          <div className="flex gap-3 pt-4">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 sm:pt-4">
             <Button
               type="button"
               onClick={onClose}

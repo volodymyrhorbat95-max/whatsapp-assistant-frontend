@@ -19,8 +19,8 @@ const DateRangePicker = ({
   onExport
 }: Props) => {
   return (
-    <div className="bg-white rounded-lg shadow p-6 mb-6">
-      <div className="flex flex-wrap items-end gap-4">
+    <div className="bg-white rounded-lg shadow p-4 sm:p-6 mb-4 sm:mb-6">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-end gap-3 sm:gap-4">
         <TextField
           label="Data Inicial"
           type="date"

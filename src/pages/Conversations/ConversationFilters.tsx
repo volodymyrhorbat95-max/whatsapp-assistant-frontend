@@ -26,8 +26,8 @@ const ConversationFilters = ({
   onClear
 }: Props) => {
   return (
-    <div className="bg-white border-b border-gray-200 p-4">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div className="bg-white border-b border-gray-200 p-3 sm:p-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <TextField
           label="Data Inicial"
           type="date"
@@ -82,12 +82,13 @@ const ConversationFilters = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-2 mt-4">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 mt-3 sm:mt-4">
         <Button
           onClick={onApply}
           variant="contained"
           size="small"
           className="animate-fade-up duration-normal"
+          fullWidth
         >
           Aplicar Filtros
         </Button>
@@ -96,6 +97,7 @@ const ConversationFilters = ({
           variant="outlined"
           size="small"
           className="animate-fade-up duration-light-slow"
+          fullWidth
         >
           Limpar
         </Button>

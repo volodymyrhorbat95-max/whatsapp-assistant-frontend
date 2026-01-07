@@ -41,22 +41,25 @@ const MessagesEditor = ({ client }: Props) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">
+    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 mb-4 sm:mb-6">
+        <h2 className="text-base sm:text-lg font-semibold text-gray-900 animate-fade-down duration-very-fast">
           Mensagens Personalizadas
         </h2>
         {hasChanges && (
           <Button
             onClick={handleSave}
             variant="contained"
+            className="animate-fade-left duration-fast"
+            fullWidth
+            sx={{ maxWidth: { sm: '200px' } }}
           >
             Salvar Alterações
           </Button>
         )}
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <TextField
           label="Mensagem de Saudação"
           value={messages.greeting || ''}
@@ -66,6 +69,7 @@ const MessagesEditor = ({ client }: Props) => {
           rows={3}
           fullWidth
           helperText="Mensagem exibida quando o cliente inicia uma conversa"
+          className="animate-fade-right duration-very-fast"
         />
 
         <TextField
@@ -77,6 +81,7 @@ const MessagesEditor = ({ client }: Props) => {
           rows={3}
           fullWidth
           helperText="Mensagem exibida após confirmação do pedido"
+          className="animate-fade-right duration-fast"
         />
 
         <TextField
@@ -88,6 +93,7 @@ const MessagesEditor = ({ client }: Props) => {
           rows={3}
           fullWidth
           helperText="Mensagem final após pedido confirmado"
+          className="animate-fade-right duration-normal"
         />
 
         <TextField
@@ -99,27 +105,28 @@ const MessagesEditor = ({ client }: Props) => {
           rows={3}
           fullWidth
           helperText="Mensagem exibida quando o bot não entende a entrada do cliente"
+          className="animate-fade-right duration-light-slow"
         />
       </div>
 
       {/* Preview */}
-      <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-        <h3 className="text-sm font-semibold text-gray-700 mb-3">
+      <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-gray-50 rounded-lg animate-fade-up duration-slow">
+        <h3 className="text-xs sm:text-sm font-semibold text-gray-700 mb-2 sm:mb-3">
           Prévia
         </h3>
         <div className="space-y-2">
           {messages.greeting && (
-            <div className="text-sm text-gray-800">
+            <div className="text-xs sm:text-sm text-gray-800">
               <span className="font-medium">Saudação:</span> {messages.greeting}
             </div>
           )}
           {messages.confirmation && (
-            <div className="text-sm text-gray-800">
+            <div className="text-xs sm:text-sm text-gray-800">
               <span className="font-medium">Confirmação:</span> {messages.confirmation}
             </div>
           )}
           {messages.farewell && (
-            <div className="text-sm text-gray-800">
+            <div className="text-xs sm:text-sm text-gray-800">
               <span className="font-medium">Despedida:</span> {messages.farewell}
             </div>
           )}

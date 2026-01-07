@@ -62,7 +62,7 @@ const ConversationList = ({ conversations }: Props) => {
 
   if (conversations.length === 0) {
     return (
-      <div className="p-4 text-center text-gray-500 animate-fade-down duration-normal">
+      <div className="p-3 sm:p-4 text-center text-gray-500 text-sm sm:text-base animate-fade-down duration-normal">
         Nenhuma conversa encontrada
       </div>
     );
@@ -78,20 +78,20 @@ const ConversationList = ({ conversations }: Props) => {
           <div
             key={conv.id}
             onClick={() => handleClick(conv.id)}
-            className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors animate-${direction} duration-${duration} ${
+            className={`p-3 sm:p-4 cursor-pointer hover:bg-gray-50 transition-colors animate-${direction} duration-${duration} ${
               current?.id === conv.id ? 'bg-blue-50 border-l-4 border-blue-500' : ''
             }`}
           >
-            <div className="flex justify-between items-start">
-              <div className="font-medium text-gray-900">{conv.customerPhone}</div>
+            <div className="flex justify-between items-start gap-2">
+              <div className="font-medium text-sm sm:text-base text-gray-900 truncate flex-1">{conv.customerPhone}</div>
               <span
-                className={`text-xs px-2 py-1 rounded-full ${getStatusColor(conv.status)}`}
+                className={`text-xs px-2 py-1 rounded-full flex-shrink-0 ${getStatusColor(conv.status)}`}
               >
                 {getStatusLabel(conv.status)}
               </span>
             </div>
             {conv.client && (
-              <div className="text-sm text-gray-600 mt-1">{conv.client.name}</div>
+              <div className="text-xs sm:text-sm text-gray-600 mt-1">{conv.client.name}</div>
             )}
             <div className="text-xs text-gray-400 mt-1">
               {formatDate(conv.lastMessageAt)}

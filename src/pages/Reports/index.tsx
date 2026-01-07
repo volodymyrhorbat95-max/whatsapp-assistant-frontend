@@ -52,12 +52,12 @@ const ReportsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 animate-fade-down duration-very-fast">Relatórios</h1>
-          <p className="text-gray-600 mt-1 animate-fade-down duration-fast">Métricas e análises de conversas</p>
+        <div className="mb-4 sm:mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 animate-fade-down duration-very-fast">Relatórios</h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-1 animate-fade-down duration-fast">Métricas e análises de conversas</p>
         </div>
 
         {/* Date Range Picker */}
@@ -74,7 +74,7 @@ const ReportsPage = () => {
         {overview && <OverviewCards metrics={overview} />}
 
         {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
           {/* Payment Methods Chart */}
           {paymentMethods.length > 0 && (
             <div className="animate-fade-right duration-slow">

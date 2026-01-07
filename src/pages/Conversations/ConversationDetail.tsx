@@ -19,17 +19,17 @@ const ConversationDetail = ({ conversation }: Props) => {
   return (
     <div className="flex-1 flex flex-col bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 p-4">
-        <div className="flex justify-between items-center">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">
+      <div className="bg-white border-b border-gray-200 p-3 sm:p-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0">
+          <div className="animate-fade-right duration-very-fast">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900">
               {conversation.customerPhone}
             </h2>
             {conversation.client && (
-              <p className="text-sm text-gray-600">{conversation.client.name}</p>
+              <p className="text-xs sm:text-sm text-gray-600">{conversation.client.name}</p>
             )}
           </div>
-          <div className="text-right text-sm text-gray-500">
+          <div className="text-left sm:text-right text-xs sm:text-sm text-gray-500 animate-fade-left duration-fast">
             <p>Iniciada: {formatDate(conversation.startedAt)}</p>
             <p>Status: {conversation.status}</p>
             {conversation.transferReason && (
@@ -40,8 +40,8 @@ const ConversationDetail = ({ conversation }: Props) => {
 
         {/* Collected Data */}
         {conversation.collectedData && Object.keys(conversation.collectedData).length > 0 && (
-          <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">Dados Coletados:</h3>
+          <div className="mt-3 sm:mt-4 p-2 sm:p-3 bg-gray-50 rounded-lg animate-fade-up duration-normal">
+            <h3 className="text-xs sm:text-sm font-semibold text-gray-700 mb-2">Dados Coletados:</h3>
             <div className="text-xs text-gray-600 space-y-1">
               {conversation.collectedData.items && conversation.collectedData.items.length > 0 && (
                 <div>
@@ -76,23 +76,24 @@ const ConversationDetail = ({ conversation }: Props) => {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
         {conversation.messages && conversation.messages.length > 0 ? (
-          conversation.messages.map((message) => (
+          conversation.messages.map((message, index) => (
             <div
               key={message.id}
-              className={`flex ${
+              className={`flex animate-fade-up ${
                 message.direction === 'outgoing' ? 'justify-end' : 'justify-start'
               }`}
+              style={{ animationDuration: `${300 + (index % 3) * 100}ms` }}
             >
               <div
-                className={`max-w-xs md:max-w-md lg:max-w-lg rounded-lg px-4 py-2 ${
+                className={`max-w-[85%] sm:max-w-xs md:max-w-md lg:max-w-lg rounded-lg px-3 sm:px-4 py-2 ${
                   message.direction === 'outgoing'
                     ? 'bg-blue-500 text-white'
                     : 'bg-white text-gray-900 border border-gray-200'
                 }`}
               >
-                <p className="break-words">{message.content}</p>
+                <p className="break-words text-sm sm:text-base">{message.content}</p>
                 <div
                   className={`text-xs mt-1 ${
                     message.direction === 'outgoing'
@@ -109,7 +110,7 @@ const ConversationDetail = ({ conversation }: Props) => {
             </div>
           ))
         ) : (
-          <div className="text-center text-gray-500">
+          <div className="text-center text-gray-500 text-sm sm:text-base animate-fade-down duration-normal">
             <p>Nenhuma mensagem nesta conversa</p>
           </div>
         )}

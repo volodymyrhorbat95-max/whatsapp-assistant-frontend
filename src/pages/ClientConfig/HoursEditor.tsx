@@ -64,28 +64,31 @@ const HoursEditor = ({ client }: Props) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">
+    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 mb-4 sm:mb-6">
+        <h2 className="text-base sm:text-lg font-semibold text-gray-900 animate-fade-down duration-very-fast">
           Horário de Funcionamento
         </h2>
         {hasChanges && (
           <Button
             onClick={handleSave}
             variant="contained"
+            className="animate-fade-left duration-fast"
+            fullWidth
+            sx={{ maxWidth: { sm: '200px' } }}
           >
             Salvar Alterações
           </Button>
         )}
       </div>
 
-      <div className="space-y-4">
-        {DAYS_OF_WEEK.map(({ key, label }) => {
+      <div className="space-y-3 sm:space-y-4">
+        {DAYS_OF_WEEK.map(({ key, label }, index) => {
           const isEnabled = !!hours[key];
           const dayHours = hours[key];
 
           return (
-            <div key={key} className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg">
+            <div key={key} className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 border border-gray-200 rounded-lg animate-fade-right duration-${index % 2 === 0 ? 'normal' : 'light-slow'}`}>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -94,31 +97,33 @@ const HoursEditor = ({ client }: Props) => {
                   />
                 }
                 label={label}
-                sx={{ flex: 1, minWidth: '150px' }}
+                sx={{ flex: 1, minWidth: '150px', margin: 0 }}
               />
 
               {isEnabled && dayHours && (
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
                   <TextField
                     type="time"
                     value={dayHours.open || ''}
                     onChange={(e) => updateDayHours(key, 'open', e.target.value)}
                     size="small"
                     slotProps={{ inputLabel: { shrink: true } }}
+                    sx={{ minWidth: '120px' }}
                   />
-                  <span className="text-gray-600">às</span>
+                  <span className="text-sm sm:text-base text-gray-600">às</span>
                   <TextField
                     type="time"
                     value={dayHours.close || ''}
                     onChange={(e) => updateDayHours(key, 'close', e.target.value)}
                     size="small"
                     slotProps={{ inputLabel: { shrink: true } }}
+                    sx={{ minWidth: '120px' }}
                   />
                 </div>
               )}
 
               {!isEnabled && (
-                <div className="text-sm text-gray-400">
+                <div className="text-xs sm:text-sm text-gray-400">
                   Fechado
                 </div>
               )}
@@ -127,8 +132,8 @@ const HoursEditor = ({ client }: Props) => {
         })}
       </div>
 
-      <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-        <p className="text-sm text-blue-800">
+      <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-50 rounded-lg animate-fade-up duration-slow">
+        <p className="text-xs sm:text-sm text-blue-800">
           <strong>Nota:</strong> O bot responderá automaticamente fora do horário de funcionamento
           informando que o estabelecimento está fechado.
         </p>
