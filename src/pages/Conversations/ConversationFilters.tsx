@@ -36,6 +36,7 @@ const ConversationFilters = ({
           size="small"
           fullWidth
           slotProps={{ inputLabel: { shrink: true } }}
+          className="animate-fade-right duration-very-fast"
         />
 
         <TextField
@@ -46,6 +47,7 @@ const ConversationFilters = ({
           size="small"
           fullWidth
           slotProps={{ inputLabel: { shrink: true } }}
+          className="animate-fade-right duration-fast"
         />
 
         <TextField
@@ -55,6 +57,7 @@ const ConversationFilters = ({
           size="small"
           fullWidth
           select
+          className="animate-fade-right duration-normal"
         >
           <MenuItem value="">Todos</MenuItem>
           <MenuItem value="ongoing">Em andamento</MenuItem>
@@ -70,6 +73,7 @@ const ConversationFilters = ({
           size="small"
           fullWidth
           select
+          className="animate-fade-right duration-light-slow"
         >
           <MenuItem value="">Todos</MenuItem>
           <MenuItem value="true">Sim</MenuItem>
@@ -83,6 +87,7 @@ const ConversationFilters = ({
           onClick={onApply}
           variant="contained"
           size="small"
+          className="animate-fade-up duration-normal"
         >
           Aplicar Filtros
         </Button>
@@ -90,6 +95,7 @@ const ConversationFilters = ({
           onClick={onClear}
           variant="outlined"
           size="small"
+          className="animate-fade-up duration-light-slow"
         >
           Limpar
         </Button>

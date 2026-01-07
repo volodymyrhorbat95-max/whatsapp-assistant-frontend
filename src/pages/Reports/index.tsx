@@ -56,8 +56,8 @@ const ReportsPage = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">Relatórios</h1>
-          <p className="text-gray-600 mt-1">Métricas e análises de conversas</p>
+          <h1 className="text-3xl font-bold text-gray-900 animate-fade-down duration-very-fast">Relatórios</h1>
+          <p className="text-gray-600 mt-1 animate-fade-down duration-fast">Métricas e análises de conversas</p>
         </div>
 
         {/* Date Range Picker */}
@@ -77,17 +77,25 @@ const ReportsPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Payment Methods Chart */}
           {paymentMethods.length > 0 && (
-            <PaymentMethodsChart data={paymentMethods} />
+            <div className="animate-fade-right duration-slow">
+              <PaymentMethodsChart data={paymentMethods} />
+            </div>
           )}
 
           {/* Peak Hours Chart */}
           {peakHours.length > 0 && (
-            <PeakHoursChart data={peakHours} />
+            <div className="animate-fade-left duration-slow">
+              <PeakHoursChart data={peakHours} />
+            </div>
           )}
         </div>
 
         {/* Top Items List */}
-        {topItems.length > 0 && <TopItemsList items={topItems} />}
+        {topItems.length > 0 && (
+          <div className="animate-fade-up duration-very-slow">
+            <TopItemsList items={topItems} />
+          </div>
+        )}
       </div>
     </div>
   );

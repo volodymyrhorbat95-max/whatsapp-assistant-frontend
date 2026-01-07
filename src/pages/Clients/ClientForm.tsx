@@ -33,10 +33,10 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md animate-zoom-in duration-fast">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-gray-900">Novo Cliente</h2>
-          <IconButton onClick={onClose} size="small">
+          <h2 className="text-xl font-bold text-gray-900 animate-fade-right duration-very-fast">Novo Cliente</h2>
+          <IconButton onClick={onClose} size="small" className="animate-fade-left duration-very-fast">
             <CloseIcon />
           </IconButton>
         </div>
@@ -49,6 +49,7 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
             required
             fullWidth
             placeholder="Ex: Pizzaria do João"
+            className="animate-fade-up duration-fast"
           />
 
           <TextField
@@ -58,6 +59,7 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
             required
             fullWidth
             select
+            className="animate-fade-up duration-normal"
           >
             <MenuItem value="delivery">Delivery</MenuItem>
             <MenuItem value="clothing">Vestuário</MenuItem>
@@ -71,6 +73,7 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
             fullWidth
             placeholder="+5511999999999"
             helperText="Formato: +55 + DDD + Número (sem espaços)"
+            className="animate-fade-up duration-light-slow"
           />
 
           <div className="flex gap-3 pt-4">
@@ -79,6 +82,7 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
               onClick={onClose}
               variant="outlined"
               fullWidth
+              className="animate-fade-right duration-normal"
             >
               Cancelar
             </Button>
@@ -86,6 +90,7 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
               type="submit"
               variant="contained"
               fullWidth
+              className="animate-fade-left duration-normal"
             >
               Criar Cliente
             </Button>

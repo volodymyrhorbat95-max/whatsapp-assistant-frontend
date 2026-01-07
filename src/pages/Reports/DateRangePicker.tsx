@@ -28,6 +28,7 @@ const DateRangePicker = ({
           onChange={(e) => onStartDateChange(e.target.value)}
           sx={{ flex: 1, minWidth: '200px' }}
           slotProps={{ inputLabel: { shrink: true } }}
+          className="animate-fade-right duration-very-fast"
         />
 
         <TextField
@@ -37,12 +38,14 @@ const DateRangePicker = ({
           onChange={(e) => onEndDateChange(e.target.value)}
           sx={{ flex: 1, minWidth: '200px' }}
           slotProps={{ inputLabel: { shrink: true } }}
+          className="animate-fade-right duration-fast"
         />
 
         {/* Apply Button */}
         <Button
           onClick={onApply}
           variant="contained"
+          className="animate-fade-left duration-normal"
         >
           Aplicar
         </Button>
@@ -53,6 +56,7 @@ const DateRangePicker = ({
           variant="contained"
           color="success"
           startIcon={<DownloadIcon />}
+          className="animate-fade-left duration-light-slow"
         >
           Exportar CSV
         </Button>

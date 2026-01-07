@@ -27,8 +27,8 @@ const ClientsPage = () => {
         {/* Header */}
         <div className="mb-6 flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Clientes</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="text-3xl font-bold text-gray-900 animate-fade-down duration-very-fast">Clientes</h1>
+            <p className="text-gray-600 mt-1 animate-fade-down duration-fast">
               {clients.length} {clients.length === 1 ? 'cliente cadastrado' : 'clientes cadastrados'}
             </p>
           </div>
@@ -36,6 +36,7 @@ const ClientsPage = () => {
             onClick={() => setShowForm(true)}
             variant="contained"
             startIcon={<AddIcon />}
+            className="animate-fade-left duration-normal"
           >
             Novo Cliente
           </Button>

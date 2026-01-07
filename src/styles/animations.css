@@ -1,0 +1,168 @@
+/* Staggered Item Animations - Design Rule Implementation */
+
+/* Base animation classes */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeLeft {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeRight {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes zoomOut {
+  from {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes flipUp {
+  from {
+    opacity: 0;
+    transform: perspective(400px) rotateX(90deg);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(400px) rotateX(0deg);
+  }
+}
+
+@keyframes flipDown {
+  from {
+    opacity: 0;
+    transform: perspective(400px) rotateX(-90deg);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(400px) rotateX(0deg);
+  }
+}
+
+/* Animation direction classes */
+.animate-fade-up {
+  animation-name: fadeUp;
+  animation-fill-mode: both;
+}
+
+.animate-fade-down {
+  animation-name: fadeDown;
+  animation-fill-mode: both;
+}
+
+.animate-fade-left {
+  animation-name: fadeLeft;
+  animation-fill-mode: both;
+}
+
+.animate-fade-right {
+  animation-name: fadeRight;
+  animation-fill-mode: both;
+}
+
+.animate-zoom-in {
+  animation-name: zoomIn;
+  animation-fill-mode: both;
+}
+
+.animate-zoom-out {
+  animation-name: zoomOut;
+  animation-fill-mode: both;
+}
+
+.animate-flip-up {
+  animation-name: flipUp;
+  animation-fill-mode: both;
+}
+
+.animate-flip-down {
+  animation-name: flipDown;
+  animation-fill-mode: both;
+}
+
+/* Animation duration classes */
+.duration-very-fast {
+  animation-duration: 200ms;
+}
+
+.duration-fast {
+  animation-duration: 400ms;
+}
+
+.duration-normal {
+  animation-duration: 600ms;
+}
+
+.duration-light-slow {
+  animation-duration: 800ms;
+}
+
+.duration-slow {
+  animation-duration: 1000ms;
+}
+
+.duration-very-slow {
+  animation-duration: 1200ms;
+}
+
+/* Easing for smooth animations */
+.animate-fade-up,
+.animate-fade-down,
+.animate-fade-left,
+.animate-fade-right,
+.animate-zoom-in,
+.animate-zoom-out,
+.animate-flip-up,
+.animate-flip-down {
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}

@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Client } from '../../types';
 import { Button } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
+import BusinessIcon from '@mui/icons-material/Business';
 import { useTheme } from '@mui/material/styles';
 
 interface Props {
@@ -34,22 +35,13 @@ const ClientList = ({ clients }: Props) => {
 
   if (clients.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow p-8 text-center">
+      <div className="bg-white rounded-lg shadow p-8 text-center animate-zoom-in duration-slow">
         <div className="text-gray-500">
-          <svg
-            className="mx-auto h-12 w-12 text-gray-400 mb-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-            />
-          </svg>
-          <p className="text-lg">Nenhum cliente cadastrado</p>
+          <BusinessIcon
+            className="mx-auto mb-4 animate-fade-down duration-fast"
+            sx={{ fontSize: 48, color: 'rgba(156, 163, 175, 1)' }}
+          />
+          <p className="text-lg animate-fade-up duration-normal">Nenhum cliente cadastrado</p>
         </div>
       </div>
     );
@@ -58,28 +50,28 @@ const ClientList = ({ clients }: Props) => {
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
       <table className="min-w-full divide-y divide-gray-200">
-        <thead style={{ backgroundColor: theme.palette.primary.light }}>
+        <thead style={{ backgroundColor: theme.palette.primary.light }} className="animate-fade-down duration-normal">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: '#ffffff' }}>
+            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider animate-fade-right duration-very-fast" style={{ color: '#ffffff' }}>
               Nome do Negócio
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: '#ffffff' }}>
+            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider animate-fade-right duration-fast" style={{ color: '#ffffff' }}>
               Segmento
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: '#ffffff' }}>
+            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider animate-fade-right duration-normal" style={{ color: '#ffffff' }}>
               WhatsApp
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: '#ffffff' }}>
+            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider animate-fade-right duration-light-slow" style={{ color: '#ffffff' }}>
               Status
             </th>
-            <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider" style={{ color: '#ffffff' }}>
+            <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider animate-fade-left duration-slow" style={{ color: '#ffffff' }}>
               Ações
             </th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {clients.map((client) => (
-            <tr key={client.id} className="hover:bg-gray-50 transition-colors">
+          {clients.map((client, index) => (
+            <tr key={client.id} className="hover:bg-gray-50 transition-colors animate-fade-up" style={{ animationDuration: `${400 + (index % 3) * 200}ms` }}>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="text-sm font-medium text-gray-900">{client.name}</div>
               </td>

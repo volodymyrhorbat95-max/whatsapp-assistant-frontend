@@ -1,4 +1,8 @@
 import { OverviewMetrics } from '../../store/slices/reportsSlice';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CloseIcon from '@mui/icons-material/Close';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 interface Props {
   metrics: OverviewMetrics;
@@ -12,7 +16,7 @@ const OverviewCards = ({ metrics }: Props) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
       {/* Conversations Started */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-lg shadow p-6 animate-fade-up duration-very-fast">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-gray-600">Conversas Iniciadas</p>
@@ -21,15 +25,13 @@ const OverviewCards = ({ metrics }: Props) => {
             </p>
           </div>
           <div className="bg-blue-100 rounded-full p-3">
-            <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
+            <ChatBubbleOutlineIcon sx={{ fontSize: 24, color: '#2563eb' }} />
           </div>
         </div>
       </div>
 
       {/* Conversion Rate */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-lg shadow p-6 animate-zoom-in duration-fast">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-gray-600">Taxa de Conversão</p>
@@ -41,15 +43,13 @@ const OverviewCards = ({ metrics }: Props) => {
             </p>
           </div>
           <div className="bg-green-100 rounded-full p-3">
-            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <CheckCircleOutlineIcon sx={{ fontSize: 24, color: '#16a34a' }} />
           </div>
         </div>
       </div>
 
       {/* Abandonments */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-lg shadow p-6 animate-fade-up duration-normal">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-gray-600">Abandonos</p>
@@ -58,15 +58,13 @@ const OverviewCards = ({ metrics }: Props) => {
             </p>
           </div>
           <div className="bg-red-100 rounded-full p-3">
-            <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <CloseIcon sx={{ fontSize: 24, color: '#dc2626' }} />
           </div>
         </div>
       </div>
 
       {/* Average Ticket */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-lg shadow p-6 animate-flip-up duration-light-slow">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-gray-600">Ticket Médio</p>
@@ -75,9 +73,7 @@ const OverviewCards = ({ metrics }: Props) => {
             </p>
           </div>
           <div className="bg-yellow-100 rounded-full p-3">
-            <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <AttachMoneyIcon sx={{ fontSize: 24, color: '#ca8a04' }} />
           </div>
         </div>
       </div>
