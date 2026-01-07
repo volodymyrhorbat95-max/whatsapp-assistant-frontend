@@ -41,7 +41,7 @@ const Navigation = () => {
       position="fixed"
       elevation={0}
       sx={{
-        backgroundColor: 'rgba(66, 153, 225, 0.95)',
+        backgroundColor: 'rgba(66, 153, 225, 0.7)',
         backdropFilter: 'blur(10px)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
       }}
@@ -69,7 +69,7 @@ const Navigation = () => {
               onClick={() => navigate(item.path)}
               startIcon={item.icon}
               variant={isActive(item.path) ? 'contained' : 'text'}
-              color={isActive(item.path) ? 'secondary' : 'inherit'}
+              color={isActive(item.path) ? 'primary' : 'inherit'}
               className={animationClasses[index]}
               sx={{
                 fontSize: { xs: '0.75rem', sm: '0.875rem' },
