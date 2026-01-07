@@ -27,7 +27,7 @@ const ConversationFilters = ({
 }: Props) => {
   return (
     <div className="bg-white border-b border-gray-200 p-3 sm:p-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="flex flex-wrap gap-3 sm:gap-4">
         <TextField
           label="Data Inicial"
           type="date"
@@ -86,7 +86,7 @@ const ConversationFilters = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 mt-3 sm:mt-4">
+      <div className="flex flex-wrap gap-2 sm:gap-2 mt-3 sm:mt-4">
         <Button
           onClick={onApply}
           variant="contained"
