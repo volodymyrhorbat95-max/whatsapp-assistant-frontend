@@ -9,7 +9,7 @@ const TopItemsList = ({ items }: Props) => {
   const maxCount = items.length > 0 ? items[0].count : 1;
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+    <div className="bg-white rounded-sm shadow p-4 sm:p-6">
       <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 animate-fade-down duration-very-fast">Itens Mais Pedidos</h2>
 
       {/* List */}

@@ -33,7 +33,7 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl p-4 sm:p-6 w-full max-w-md animate-zoom-in duration-fast">
+      <div className="bg-white rounded-sm shadow-xl p-4 sm:p-6 w-full max-w-md animate-zoom-in duration-fast">
         <div className="flex justify-between items-center mb-4 sm:mb-6">
           <h2 className="text-lg sm:text-xl font-bold text-gray-900 animate-fade-right duration-very-fast">Novo Cliente</h2>
           <IconButton onClick={onClose} size="small" className="animate-fade-left duration-very-fast">

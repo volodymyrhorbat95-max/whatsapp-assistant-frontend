@@ -41,7 +41,7 @@ const MessagesEditor = ({ client }: Props) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+    <div className="bg-white rounded-sm shadow p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 mb-4 sm:mb-6">
         <h2 className="text-base sm:text-lg font-semibold text-gray-900 animate-fade-down duration-very-fast">
           Mensagens Personalizadas
@@ -110,7 +110,7 @@ const MessagesEditor = ({ client }: Props) => {
       </div>
 
       {/* Preview */}
-      <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-gray-50 rounded-lg animate-fade-up duration-slow">
+      <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-gray-50 rounded-sm animate-fade-up duration-slow">
         <h3 className="text-xs sm:text-sm font-semibold text-gray-700 mb-2 sm:mb-3">
           Prévia
         </h3>

@@ -40,7 +40,7 @@ const ConversationDetail = ({ conversation }: Props) => {
 
         {/* Collected Data */}
         {conversation.collectedData && Object.keys(conversation.collectedData).length > 0 && (
-          <div className="mt-3 sm:mt-4 p-2 sm:p-3 bg-gray-50 rounded-lg animate-fade-up duration-normal">
+          <div className="mt-3 sm:mt-4 p-2 sm:p-3 bg-gray-50 rounded-sm animate-fade-up duration-normal">
             <h3 className="text-xs sm:text-sm font-semibold text-gray-700 mb-2">Dados Coletados:</h3>
             <div className="text-xs text-gray-600 space-y-1">
               {conversation.collectedData.items && conversation.collectedData.items.length > 0 && (
@@ -87,7 +87,7 @@ const ConversationDetail = ({ conversation }: Props) => {
               style={{ animationDuration: `${300 + (index % 3) * 100}ms` }}
             >
               <div
-                className={`max-w-[85%] sm:max-w-xs md:max-w-md lg:max-w-lg rounded-lg px-3 sm:px-4 py-2 ${
+                className={`max-w-[85%] sm:max-w-xs md:max-w-md lg:max-w-lg rounded-sm px-3 sm:px-4 py-2 ${
                   message.direction === 'outgoing'
                     ? 'bg-blue-500 text-white'
                     : 'bg-white text-gray-900 border border-gray-200'

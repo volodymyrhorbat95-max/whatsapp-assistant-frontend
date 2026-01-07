@@ -16,7 +16,7 @@ const OverviewCards = ({ metrics }: Props) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-4 sm:mb-6">
       {/* Conversations Started */}
-      <div className="bg-white rounded-lg shadow p-6 animate-fade-up duration-very-fast">
+      <div className="bg-white rounded-sm shadow p-6 animate-fade-up duration-very-fast">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-gray-600">Conversas Iniciadas</p>
@@ -31,7 +31,7 @@ const OverviewCards = ({ metrics }: Props) => {
       </div>
 
       {/* Conversion Rate */}
-      <div className="bg-white rounded-lg shadow p-6 animate-zoom-in duration-fast">
+      <div className="bg-white rounded-sm shadow p-6 animate-zoom-in duration-fast">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-gray-600">Taxa de Conversão</p>
@@ -49,7 +49,7 @@ const OverviewCards = ({ metrics }: Props) => {
       </div>
 
       {/* Abandonments */}
-      <div className="bg-white rounded-lg shadow p-6 animate-fade-up duration-normal">
+      <div className="bg-white rounded-sm shadow p-6 animate-fade-up duration-normal">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-gray-600">Abandonos</p>
@@ -64,7 +64,7 @@ const OverviewCards = ({ metrics }: Props) => {
       </div>
 
       {/* Average Ticket */}
-      <div className="bg-white rounded-lg shadow p-6 animate-flip-up duration-light-slow">
+      <div className="bg-white rounded-sm shadow p-6 animate-flip-up duration-light-slow">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-gray-600">Ticket Médio</p>

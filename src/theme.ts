@@ -52,7 +52,7 @@ const theme = createTheme({
     ].join(','),
   },
   shape: {
-    borderRadius: 8,
+    borderRadius: 2,
   },
 });
 

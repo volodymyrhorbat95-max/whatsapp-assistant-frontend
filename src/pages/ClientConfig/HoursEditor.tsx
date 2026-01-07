@@ -64,7 +64,7 @@ const HoursEditor = ({ client }: Props) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+    <div className="bg-white rounded-sm shadow p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 mb-4 sm:mb-6">
         <h2 className="text-base sm:text-lg font-semibold text-gray-900 animate-fade-down duration-very-fast">
           Horário de Funcionamento
@@ -88,7 +88,7 @@ const HoursEditor = ({ client }: Props) => {
           const dayHours = hours[key];
 
           return (
-            <div key={key} className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 border border-gray-200 rounded-lg animate-fade-right duration-${index % 2 === 0 ? 'normal' : 'light-slow'}`}>
+            <div key={key} className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 border border-gray-200 rounded-sm animate-fade-right duration-${index % 2 === 0 ? 'normal' : 'light-slow'}`}>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -132,7 +132,7 @@ const HoursEditor = ({ client }: Props) => {
         })}
       </div>
 
-      <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-50 rounded-lg animate-fade-up duration-slow">
+      <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-50 rounded-sm animate-fade-up duration-slow">
         <p className="text-xs sm:text-sm text-blue-800">
           <strong>Nota:</strong> O bot responderá automaticamente fora do horário de funcionamento
           informando que o estabelecimento está fechado.

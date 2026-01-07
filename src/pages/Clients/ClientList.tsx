@@ -35,7 +35,7 @@ const ClientList = ({ clients }: Props) => {
 
   if (clients.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow p-8 text-center animate-zoom-in duration-slow">
+      <div className="bg-white rounded-sm shadow p-8 text-center animate-zoom-in duration-slow">
         <div className="text-gray-500">
           <BusinessIcon
             className="mx-auto mb-4 animate-fade-down duration-fast"
@@ -50,7 +50,7 @@ const ClientList = ({ clients }: Props) => {
   return (
     <>
       {/* Desktop Table View */}
-      <div className="hidden md:block bg-white rounded-lg shadow overflow-hidden">
+      <div className="hidden md:block bg-white rounded-sm shadow overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
           <thead style={{ backgroundColor: theme.palette.primary.light }} className="animate-fade-down duration-normal">
             <tr>
@@ -112,7 +112,7 @@ const ClientList = ({ clients }: Props) => {
         {clients.map((client, index) => (
           <div
             key={client.id}
-            className="bg-white rounded-lg shadow p-4 animate-fade-up"
+            className="bg-white rounded-sm shadow p-4 animate-fade-up"
             style={{ animationDuration: `${400 + (index % 3) * 200}ms` }}
           >
             <div className="flex justify-between items-start mb-3">

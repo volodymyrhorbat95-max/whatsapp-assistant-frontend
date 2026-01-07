@@ -64,7 +64,7 @@ const CatalogEditor = ({ client }: Props) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+    <div className="bg-white rounded-sm shadow p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 mb-4 sm:mb-6">
         <h2 className="text-base sm:text-lg font-semibold text-gray-900 animate-fade-down duration-very-fast">
           Cardápio
@@ -84,7 +84,7 @@ const CatalogEditor = ({ client }: Props) => {
 
       <div className="space-y-6 sm:space-y-8">
         {catalog.map((category, categoryIndex) => (
-          <div key={categoryIndex} className={`border border-gray-200 rounded-lg p-3 sm:p-4 animate-zoom-in duration-${categoryIndex % 2 === 0 ? 'normal' : 'light-slow'}`}>
+          <div key={categoryIndex} className={`border border-gray-200 rounded-sm p-3 sm:p-4 animate-zoom-in duration-${categoryIndex % 2 === 0 ? 'normal' : 'light-slow'}`}>
             <h3 className="text-sm sm:text-md font-semibold text-gray-900 mb-3 sm:mb-4 animate-fade-right duration-very-fast">
               {category.category}
             </h3>
