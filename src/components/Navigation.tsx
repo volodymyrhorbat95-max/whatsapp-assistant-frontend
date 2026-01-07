@@ -54,7 +54,7 @@ const Navigation = () => {
             flexGrow: 1,
             fontWeight: 'bold',
             fontSize: { xs: '1rem', sm: '1.25rem' },
-            color: 'text.primary'
+            color: 'white'
           }}
           className="animate-fade-right duration-fast"
         >
@@ -69,12 +69,16 @@ const Navigation = () => {
               onClick={() => navigate(item.path)}
               startIcon={item.icon}
               variant={isActive(item.path) ? 'contained' : 'text'}
-              color={isActive(item.path) ? 'primary' : 'inherit'}
+              color={isActive(item.path) ? 'secondary' : 'inherit'}
               className={animationClasses[index]}
               sx={{
                 fontSize: { xs: '0.75rem', sm: '0.875rem' },
                 padding: { xs: '4px 8px', sm: '6px 16px' },
-                minWidth: { xs: 'auto', sm: '64px' }
+                minWidth: { xs: 'auto', sm: '64px' },
+                color: isActive(item.path) ? undefined : 'white',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                }
               }}
             >
               <span className="hidden sm:inline">{item.label}</span>
