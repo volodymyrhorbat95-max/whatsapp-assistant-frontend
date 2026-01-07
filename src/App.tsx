@@ -15,25 +15,27 @@ function App() {
       <CssBaseline />
       <GlobalSpinner />
       <Navigation />
-      <Routes>
-        {/* Clients list page */}
-        <Route path="/clients" element={<ClientsPage />} />
+      <div style={{ paddingTop: '64px' }}>
+        <Routes>
+          {/* Clients list page */}
+          <Route path="/clients" element={<ClientsPage />} />
 
-        {/* Main conversations page */}
-        <Route path="/conversations" element={<ConversationsPage />} />
+          {/* Main conversations page */}
+          <Route path="/conversations" element={<ConversationsPage />} />
 
-        {/* Reports page */}
-        <Route path="/reports" element={<ReportsPage />} />
+          {/* Reports page */}
+          <Route path="/reports" element={<ReportsPage />} />
 
-        {/* Client configuration page */}
-        <Route path="/clients/:id/config" element={<ClientConfig />} />
+          {/* Client configuration page */}
+          <Route path="/clients/:id/config" element={<ClientConfig />} />
 
-        {/* Redirect root to clients */}
-        <Route path="/" element={<Navigate to="/clients" replace />} />
+          {/* Redirect root to clients */}
+          <Route path="/" element={<Navigate to="/clients" replace />} />
 
-        {/* 404 - redirect to clients */}
-        <Route path="*" element={<Navigate to="/clients" replace />} />
-      </Routes>
+          {/* 404 - redirect to clients */}
+          <Route path="*" element={<Navigate to="/clients" replace />} />
+        </Routes>
+      </div>
     </ThemeProvider>
   );
 }
