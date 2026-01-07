@@ -37,6 +37,7 @@ const ConversationFilters = ({
           fullWidth
           slotProps={{ inputLabel: { shrink: true } }}
           className="animate-fade-right duration-very-fast"
+          sx={{ minWidth: '200px' }}
         />
 
         <TextField
@@ -48,6 +49,7 @@ const ConversationFilters = ({
           fullWidth
           slotProps={{ inputLabel: { shrink: true } }}
           className="animate-fade-right duration-fast"
+          sx={{ minWidth: '200px' }}
         />
 
         <TextField
@@ -58,6 +60,7 @@ const ConversationFilters = ({
           fullWidth
           select
           className="animate-fade-right duration-normal"
+          sx={{ minWidth: '200px' }}
         >
           <MenuItem value="">Todos</MenuItem>
           <MenuItem value="ongoing">Em andamento</MenuItem>
@@ -74,6 +77,7 @@ const ConversationFilters = ({
           fullWidth
           select
           className="animate-fade-right duration-light-slow"
+          sx={{ minWidth: '200px' }}
         >
           <MenuItem value="">Todos</MenuItem>
           <MenuItem value="true">Sim</MenuItem>
@@ -89,6 +93,7 @@ const ConversationFilters = ({
           size="small"
           className="animate-fade-up duration-normal"
           fullWidth
+          sx={{ minWidth: '200px' }}
         >
           Aplicar Filtros
         </Button>
@@ -98,6 +103,7 @@ const ConversationFilters = ({
           size="small"
           className="animate-fade-up duration-light-slow"
           fullWidth
+          sx={{ minWidth: '200px' }}
         >
           Limpar
         </Button>
