@@ -3,13 +3,15 @@ import loadingReducer from './slices/loadingSlice';
 import conversationReducer from './slices/conversationSlice';
 import clientReducer from './slices/clientSlice';
 import reportsReducer from './slices/reportsSlice';
+import orderReducer from './slices/orderSlice';
 
 export const store = configureStore({
   reducer: {
     loading: loadingReducer,
     conversations: conversationReducer,
     client: clientReducer,
-    reports: reportsReducer
+    reports: reportsReducer,
+    orders: orderReducer
   }
 });
 

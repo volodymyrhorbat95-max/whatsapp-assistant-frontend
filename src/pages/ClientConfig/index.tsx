@@ -8,8 +8,10 @@ import { fetchClient } from '../../store/slices/clientSlice';
 import CatalogEditor from './CatalogEditor';
 import MessagesEditor from './MessagesEditor';
 import HoursEditor from './HoursEditor';
+import CostsEditor from './CostsEditor';
+import PaymentMethodsEditor from './PaymentMethodsEditor';
 
-type TabType = 'catalog' | 'messages' | 'hours';
+type TabType = 'catalog' | 'messages' | 'hours' | 'payments' | 'costs';
 
 const ClientConfig = () => {
   const { id } = useParams<{ id: string }>();
@@ -82,6 +84,26 @@ const ClientConfig = () => {
             >
               Horário de Funcionamento
             </button>
+            <button
+              onClick={() => setActiveTab('payments')}
+              className={`py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors whitespace-nowrap animate-fade-right duration-light-slow ${
+                activeTab === 'payments'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Pagamentos
+            </button>
+            <button
+              onClick={() => setActiveTab('costs')}
+              className={`py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-colors whitespace-nowrap animate-fade-right duration-slow ${
+                activeTab === 'costs'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Custos
+            </button>
           </div>
         </div>
       </div>
@@ -91,6 +113,8 @@ const ClientConfig = () => {
         {activeTab === 'catalog' && <CatalogEditor client={currentClient} />}
         {activeTab === 'messages' && <MessagesEditor client={currentClient} />}
         {activeTab === 'hours' && <HoursEditor client={currentClient} />}
+        {activeTab === 'payments' && <PaymentMethodsEditor client={currentClient} />}
+        {activeTab === 'costs' && <CostsEditor client={currentClient} />}
       </div>
     </div>
   );

@@ -28,11 +28,21 @@ export interface TopItem {
   count: number;
 }
 
+export interface FinancialHealth {
+  totalRevenue: number;
+  fixedCosts: number;
+  variableCosts: number;
+  estimatedProfit: number;
+  profitMargin: number;
+  orderCount: number;
+}
+
 interface ReportsState {
   overview: OverviewMetrics | null;
   paymentMethods: PaymentMethodBreakdown[];
   peakHours: PeakHour[];
   topItems: TopItem[];
+  financialHealth: FinancialHealth | null;
   error: string | null;
 }
 
@@ -41,6 +51,7 @@ const initialState: ReportsState = {
   paymentMethods: [],
   peakHours: [],
   topItems: [],
+  financialHealth: null,
   error: null
 };
 
@@ -180,6 +191,33 @@ export const exportCSV = createAsyncThunk<
   }
 );
 
+// Fetch financial health (requires clientId)
+export const fetchFinancialHealth = createAsyncThunk<
+  FinancialHealth,
+  { startDate: string; endDate: string; clientId: number },
+  { dispatch: AppDispatch }
+>(
+  'reports/fetchFinancialHealth',
+  async ({ startDate, endDate, clientId }, { dispatch }) => {
+    dispatch(setLoading(true));
+    try {
+      const params = new URLSearchParams({
+        startDate,
+        endDate,
+        clientId: clientId.toString()
+      });
+
+      const response = await fetch(`${API_BASE_URL}/reports/financial-health?${params}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch financial health');
+      }
+      return await response.json();
+    } finally {
+      dispatch(setLoading(false));
+    }
+  }
+);
+
 const reportsSlice = createSlice({
   name: 'reports',
   initialState,
@@ -189,10 +227,14 @@ const reportsSlice = createSlice({
       state.paymentMethods = [];
       state.peakHours = [];
       state.topItems = [];
+      state.financialHealth = null;
       state.error = null;
     },
     clearError: (state) => {
       state.error = null;
+    },
+    clearFinancialHealth: (state) => {
+      state.financialHealth = null;
     }
   },
   extraReducers: (builder) => {
@@ -232,8 +274,16 @@ const reportsSlice = createSlice({
     builder.addCase(exportCSV.rejected, (state, action) => {
       state.error = action.error.message || 'Failed to export CSV';
     });
+
+    // Fetch financial health
+    builder.addCase(fetchFinancialHealth.fulfilled, (state, action: PayloadAction<FinancialHealth>) => {
+      state.financialHealth = action.payload;
+    });
+    builder.addCase(fetchFinancialHealth.rejected, (state, action) => {
+      state.error = action.error.message || 'Failed to fetch financial health';
+    });
   }
 });
 
-export const { clearReports, clearError } = reportsSlice.actions;
+export const { clearReports, clearError, clearFinancialHealth } = reportsSlice.actions;
 export default reportsSlice.reducer;

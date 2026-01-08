@@ -1,10 +1,55 @@
-import { ConversationWithMessages } from '../../types';
+import { useState } from 'react';
+import { Button, MenuItem, TextField } from '@mui/material';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import PendingIcon from '@mui/icons-material/Pending';
+import CancelIcon from '@mui/icons-material/Cancel';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import { ConversationWithMessages, OrderStatus } from '../../types';
+import { useAppDispatch } from '../../store/hooks';
+import { updateOrderStatus } from '../../store/slices/orderSlice';
+import { fetchConversationById } from '../../store/slices/conversationSlice';
 
 interface Props {
   conversation: ConversationWithMessages;
 }
 
+// Status labels in Brazilian Portuguese
+const STATUS_LABELS: Record<OrderStatus, string> = {
+  pending: 'Pendente',
+  confirmed: 'Confirmado',
+  preparing: 'Preparando',
+  out_for_delivery: 'Saiu para Entrega',
+  delivered: 'Entregue',
+  cancelled: 'Cancelado'
+};
+
+// Status icons
+const STATUS_ICONS: Record<OrderStatus, JSX.Element> = {
+  pending: <PendingIcon fontSize="small" />,
+  confirmed: <CheckCircleIcon fontSize="small" />,
+  preparing: <RestaurantIcon fontSize="small" />,
+  out_for_delivery: <DirectionsCarIcon fontSize="small" />,
+  delivered: <LocalShippingIcon fontSize="small" />,
+  cancelled: <CancelIcon fontSize="small" />
+};
+
+// Status colors
+const STATUS_COLORS: Record<OrderStatus, string> = {
+  pending: 'bg-yellow-100 text-yellow-800',
+  confirmed: 'bg-blue-100 text-blue-800',
+  preparing: 'bg-orange-100 text-orange-800',
+  out_for_delivery: 'bg-purple-100 text-purple-800',
+  delivered: 'bg-green-100 text-green-800',
+  cancelled: 'bg-red-100 text-red-800'
+};
+
 const ConversationDetail = ({ conversation }: Props) => {
+  const dispatch = useAppDispatch();
+  const [selectedStatus, setSelectedStatus] = useState<OrderStatus | ''>('');
+  const [notifyCustomer, setNotifyCustomer] = useState(true);
+
   // Format date to PT-BR
   const formatDate = (date: Date | string) => {
     return new Date(date).toLocaleString('pt-BR', {
@@ -14,6 +59,21 @@ const ConversationDetail = ({ conversation }: Props) => {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  // Handle order status update
+  const handleStatusUpdate = async () => {
+    if (!conversation.order || !selectedStatus) return;
+
+    await dispatch(updateOrderStatus({
+      orderId: conversation.order.id,
+      status: selectedStatus,
+      notifyCustomer
+    }));
+
+    // Refresh conversation to get updated order
+    dispatch(fetchConversationById(conversation.id));
+    setSelectedStatus('');
   };
 
   return (
@@ -38,8 +98,99 @@ const ConversationDetail = ({ conversation }: Props) => {
           </div>
         </div>
 
-        {/* Collected Data */}
-        {conversation.collectedData && Object.keys(conversation.collectedData).length > 0 && (
+        {/* Order Status Management */}
+        {conversation.order && (
+          <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-blue-50 rounded-lg border border-blue-200 animate-zoom-in duration-normal">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+              <div className="animate-fade-right duration-fast">
+                <h3 className="text-sm sm:text-base font-semibold text-blue-900 mb-2">
+                  Pedido #{conversation.order.id}
+                </h3>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${STATUS_COLORS[conversation.order.status]}`}>
+                    {STATUS_ICONS[conversation.order.status]}
+                    {STATUS_LABELS[conversation.order.status]}
+                  </span>
+                </div>
+                {conversation.order.totalAmount && (
+                  <p className="text-sm text-blue-800">
+                    <span className="font-medium">Total:</span> R$ {Number(conversation.order.totalAmount).toFixed(2)}
+                  </p>
+                )}
+                {conversation.order.paymentMethod && (
+                  <p className="text-sm text-blue-800">
+                    <span className="font-medium">Pagamento:</span> {conversation.order.paymentMethod === 'pix' ? 'Pix' : conversation.order.paymentMethod === 'card' ? 'Cartão' : 'Dinheiro'}
+                  </p>
+                )}
+                {conversation.order.deliveryAddress && (
+                  <p className="text-sm text-blue-800">
+                    <span className="font-medium">Endereço:</span> {conversation.order.deliveryAddress}
+                  </p>
+                )}
+              </div>
+
+              {/* Status Update Controls */}
+              <div className="flex flex-col gap-2 w-full sm:w-auto animate-fade-left duration-light-slow">
+                <TextField
+                  select
+                  label="Atualizar Status"
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value as OrderStatus)}
+                  size="small"
+                  fullWidth
+                  sx={{ minWidth: { sm: '180px' } }}
+                  className="animate-fade-down duration-normal"
+                >
+                  <MenuItem value="">Selecione...</MenuItem>
+                  <MenuItem value="confirmed">Confirmado</MenuItem>
+                  <MenuItem value="preparing">Preparando</MenuItem>
+                  <MenuItem value="out_for_delivery">Saiu para Entrega</MenuItem>
+                  <MenuItem value="delivered">Entregue</MenuItem>
+                  <MenuItem value="cancelled">Cancelado</MenuItem>
+                </TextField>
+
+                <label className="flex items-center gap-2 text-xs sm:text-sm text-blue-800 animate-fade-up duration-light-slow">
+                  <input
+                    type="checkbox"
+                    checked={notifyCustomer}
+                    onChange={(e) => setNotifyCustomer(e.target.checked)}
+                    className="rounded"
+                  />
+                  Notificar cliente via WhatsApp
+                </label>
+
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={handleStatusUpdate}
+                  disabled={!selectedStatus}
+                  fullWidth
+                  className="animate-fade-up duration-slow"
+                >
+                  Atualizar
+                </Button>
+              </div>
+            </div>
+
+            {/* Order Items */}
+            {conversation.order.items && conversation.order.items.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-blue-200 animate-fade-up duration-slow">
+                <h4 className="text-xs font-semibold text-blue-800 mb-2">Itens do Pedido:</h4>
+                <ul className="text-xs text-blue-700 space-y-1">
+                  {conversation.order.items.map((item, idx) => (
+                    <li key={idx} className="flex justify-between">
+                      <span>{item.quantity}x {item.name}</span>
+                      <span>R$ {(item.price * item.quantity).toFixed(2)}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Collected Data (when no order yet) */}
+        {!conversation.order && conversation.collectedData && Object.keys(conversation.collectedData).length > 0 && (
           <div className="mt-3 sm:mt-4 p-2 sm:p-3 bg-gray-50 rounded-sm animate-fade-up duration-normal">
             <h3 className="text-xs sm:text-sm font-semibold text-gray-700 mb-2">Dados Coletados:</h3>
             <div className="text-xs text-gray-600 space-y-1">
@@ -47,7 +198,7 @@ const ConversationDetail = ({ conversation }: Props) => {
                 <div>
                   <span className="font-medium">Itens:</span>
                   <ul className="ml-4 list-disc">
-                    {conversation.collectedData.items.map((item: any, idx: number) => (
+                    {conversation.collectedData.items.map((item, idx) => (
                       <li key={idx}>{item.name} - R$ {item.price.toFixed(2)}</li>
                     ))}
                   </ul>
