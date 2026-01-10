@@ -62,7 +62,7 @@ const ReportsPage = () => {
   };
 
   const handleExportCSV = () => {
-    dispatch(exportCSV({ startDate, endDate }));
+    dispatch(exportCSV({ startDate, endDate, clientId: selectedClientId || undefined }));
   };
 
   if (loading) {
@@ -80,9 +80,9 @@ const ReportsPage = () => {
 
         {/* Filters Row */}
         <div className="bg-white rounded-lg shadow p-4 sm:p-6 mb-4 sm:mb-6 animate-fade-up duration-normal">
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 items-end">
             {/* Client Selector */}
-            <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 200 } }}>
+            <FormControl size="small" fullWidth className="animate-fade-right duration-very-fast">
               <InputLabel id="client-select-label">Cliente</InputLabel>
               <Select
                 labelId="client-select-label"
@@ -101,17 +101,15 @@ const ReportsPage = () => {
               </Select>
             </FormControl>
 
-            {/* Date Range Picker */}
-            <div className="flex-1 w-full">
-              <DateRangePicker
-                startDate={startDate}
-                endDate={endDate}
-                onStartDateChange={setStartDate}
-                onEndDateChange={setEndDate}
-                onApply={handleApplyFilters}
-                onExport={handleExportCSV}
-              />
-            </div>
+            {/* Date Range Picker Inline */}
+            <DateRangePicker
+              startDate={startDate}
+              endDate={endDate}
+              onStartDateChange={setStartDate}
+              onEndDateChange={setEndDate}
+              onApply={handleApplyFilters}
+              onExport={handleExportCSV}
+            />
           </div>
         </div>
 

@@ -73,7 +73,12 @@ const ClientList = ({ clients }: Props) => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {clients.map((client, index) => (
-              <tr key={client.id} className="hover:bg-gray-50 transition-colors animate-fade-up" style={{ animationDuration: `${400 + (index % 3) * 200}ms` }}>
+              <tr
+                key={client.id}
+                onClick={() => handleConfigClick(client.id)}
+                className="hover:bg-gray-50 transition-colors cursor-pointer animate-fade-up"
+                style={{ animationDuration: `${400 + (index % 3) * 200}ms` }}
+              >
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">{client.name}</div>
                 </td>
@@ -94,7 +99,10 @@ const ClientList = ({ clients }: Props) => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <Button
-                    onClick={() => handleConfigClick(client.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleConfigClick(client.id);
+                    }}
                     variant="text"
                     startIcon={<SettingsIcon />}
                   >
@@ -112,7 +120,8 @@ const ClientList = ({ clients }: Props) => {
         {clients.map((client, index) => (
           <div
             key={client.id}
-            className="bg-white rounded-sm shadow p-4 animate-fade-up"
+            onClick={() => handleConfigClick(client.id)}
+            className="bg-white rounded-sm shadow p-4 cursor-pointer hover:shadow-md transition-shadow animate-fade-up"
             style={{ animationDuration: `${400 + (index % 3) * 200}ms` }}
           >
             <div className="flex justify-between items-start mb-3">
@@ -132,7 +141,10 @@ const ClientList = ({ clients }: Props) => {
               <span className="font-medium">WhatsApp:</span> {client.whatsappNumber}
             </div>
             <Button
-              onClick={() => handleConfigClick(client.id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleConfigClick(client.id);
+              }}
               variant="outlined"
               startIcon={<SettingsIcon />}
               fullWidth

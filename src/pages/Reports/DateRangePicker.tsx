@@ -19,49 +19,53 @@ const DateRangePicker = ({
   onExport
 }: Props) => {
   return (
-    <div className="bg-white rounded-sm shadow p-4 sm:p-6 mb-4 sm:mb-6">
-      <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-end gap-3 sm:gap-4">
-        <TextField
-          label="Data Inicial"
-          type="date"
-          value={startDate}
-          onChange={(e) => onStartDateChange(e.target.value)}
-          sx={{ flex: 1, minWidth: '200px' }}
-          slotProps={{ inputLabel: { shrink: true } }}
-          className="animate-fade-right duration-very-fast"
-        />
+    <>
+      <TextField
+        label="Data Inicial"
+        type="date"
+        value={startDate}
+        onChange={(e) => onStartDateChange(e.target.value)}
+        size="small"
+        fullWidth
+        slotProps={{ inputLabel: { shrink: true } }}
+        className="animate-fade-right duration-fast"
+      />
 
-        <TextField
-          label="Data Final"
-          type="date"
-          value={endDate}
-          onChange={(e) => onEndDateChange(e.target.value)}
-          sx={{ flex: 1, minWidth: '200px' }}
-          slotProps={{ inputLabel: { shrink: true } }}
-          className="animate-fade-right duration-fast"
-        />
+      <TextField
+        label="Data Final"
+        type="date"
+        value={endDate}
+        onChange={(e) => onEndDateChange(e.target.value)}
+        size="small"
+        fullWidth
+        slotProps={{ inputLabel: { shrink: true } }}
+        className="animate-fade-right duration-normal"
+      />
 
-        {/* Apply Button */}
-        <Button
-          onClick={onApply}
-          variant="contained"
-          className="animate-fade-left duration-normal"
-        >
-          Aplicar
-        </Button>
+      {/* Apply Button */}
+      <Button
+        onClick={onApply}
+        variant="contained"
+        size="small"
+        fullWidth
+        className="animate-fade-left duration-light-slow"
+      >
+        Aplicar
+      </Button>
 
-        {/* Export CSV Button */}
-        <Button
-          onClick={onExport}
-          variant="contained"
-          color="success"
-          startIcon={<DownloadIcon />}
-          className="animate-fade-left duration-light-slow"
-        >
-          Exportar CSV
-        </Button>
-      </div>
-    </div>
+      {/* Export CSV Button */}
+      <Button
+        onClick={onExport}
+        variant="contained"
+        color="success"
+        size="small"
+        startIcon={<DownloadIcon />}
+        fullWidth
+        className="animate-fade-left duration-slow"
+      >
+        Exportar CSV
+      </Button>
+    </>
   );
 };
 
