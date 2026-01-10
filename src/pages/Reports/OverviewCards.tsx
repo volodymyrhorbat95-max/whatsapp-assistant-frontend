@@ -69,7 +69,7 @@ const OverviewCards = ({ metrics }: Props) => {
           <div>
             <p className="text-sm font-medium text-gray-600">Ticket Médio</p>
             <p className="text-3xl font-bold text-gray-900 mt-2">
-              R$ {metrics.averageTicket.toFixed(2)}
+              R$ {metrics.averageTicket?.toFixed(2) ?? '0.00'}
             </p>
           </div>
           <div className="bg-yellow-100 rounded-full p-3">
