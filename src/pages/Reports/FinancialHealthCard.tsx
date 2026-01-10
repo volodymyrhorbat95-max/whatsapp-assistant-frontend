@@ -6,7 +6,6 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ReceiptIcon from '@mui/icons-material/Receipt';
-import PercentIcon from '@mui/icons-material/Percent';
 import { TextField } from '@mui/material';
 
 interface Props {
