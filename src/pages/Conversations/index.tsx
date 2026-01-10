@@ -37,7 +37,7 @@ const ConversationsPage = () => {
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-100">
       {/* Sidebar - Conversation List */}
-      <div className="w-full md:w-1/3 bg-white border-b md:border-b-0 md:border-r border-gray-200 overflow-hidden flex flex-col max-h-[50vh] md:max-h-none">
+      <div className="@container w-full md:w-1/3 bg-white border-b md:border-b-0 md:border-r border-gray-200 overflow-hidden flex flex-col max-h-[50vh] md:max-h-none">
         <div className="p-3 sm:p-4 border-b border-gray-200">
           <h1 className="text-lg sm:text-xl font-bold text-gray-800 animate-fade-down duration-very-fast">Conversas</h1>
           <p className="text-xs sm:text-sm text-gray-500 animate-fade-down duration-fast">{list.length} conversas</p>

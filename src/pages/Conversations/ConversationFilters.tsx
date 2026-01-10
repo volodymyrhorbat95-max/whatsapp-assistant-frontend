@@ -27,7 +27,7 @@ const ConversationFilters = ({
 }: Props) => {
   return (
     <div className="bg-white border-b border-gray-200 p-3 sm:p-4">
-      <div className="flex flex-wrap gap-3 sm:gap-4">
+      <div className="grid gap-3 sm:gap-4 @[480px]:grid-cols-2">
         <TextField
           label="Data Inicial"
           type="date"
@@ -37,7 +37,6 @@ const ConversationFilters = ({
           fullWidth
           slotProps={{ inputLabel: { shrink: true } }}
           className="animate-fade-right duration-very-fast"
-          sx={{ minWidth: '200px' }}
         />
 
         <TextField
@@ -49,7 +48,6 @@ const ConversationFilters = ({
           fullWidth
           slotProps={{ inputLabel: { shrink: true } }}
           className="animate-fade-right duration-fast"
-          sx={{ minWidth: '200px' }}
         />
 
         <TextField
@@ -60,7 +58,6 @@ const ConversationFilters = ({
           fullWidth
           select
           className="animate-fade-right duration-normal"
-          sx={{ minWidth: '200px' }}
         >
           <MenuItem value="">Todos</MenuItem>
           <MenuItem value="ongoing">Em andamento</MenuItem>
@@ -77,23 +74,18 @@ const ConversationFilters = ({
           fullWidth
           select
           className="animate-fade-right duration-light-slow"
-          sx={{ minWidth: '200px' }}
         >
           <MenuItem value="">Todos</MenuItem>
           <MenuItem value="true">Sim</MenuItem>
           <MenuItem value="false">Não</MenuItem>
         </TextField>
-      </div>
 
-      {/* Action Buttons */}
-      <div className="flex flex-wrap gap-2 sm:gap-2 mt-3 sm:mt-4">
         <Button
           onClick={onApply}
           variant="contained"
           size="small"
           className="animate-fade-up duration-normal"
           fullWidth
-          sx={{ minWidth: '200px' }}
         >
           Aplicar Filtros
         </Button>
@@ -103,7 +95,6 @@ const ConversationFilters = ({
           size="small"
           className="animate-fade-up duration-light-slow"
           fullWidth
-          sx={{ minWidth: '200px' }}
         >
           Limpar
         </Button>
