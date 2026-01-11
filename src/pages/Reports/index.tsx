@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
 import {
@@ -7,7 +7,6 @@ import {
   fetchPeakHours,
   fetchTopItems,
   fetchFinancialHealth,
-  clearFinancialHealth,
   exportCSV
 } from '../../store/slices/reportsSlice';
 import { fetchClients } from '../../store/slices/clientSlice';
@@ -34,35 +33,49 @@ const ReportsPage = () => {
   const [endDate, setEndDate] = useState<string>(today.toISOString().split('T')[0]);
   const [selectedClientId, setSelectedClientId] = useState<number | ''>('');
 
-  const loadReports = () => {
-    const params = { startDate, endDate, clientId: selectedClientId || undefined };
+  // Memoize loadReports to prevent unnecessary re-renders
+  const loadReports = useCallback(() => {
+    // CRITICAL: Data isolation - REQUIRE clientId for all queries
+    if (!selectedClientId) {
+      return; // Cannot load reports without client selection
+    }
+
+    const params = { startDate, endDate, clientId: selectedClientId as number };
     dispatch(fetchOverviewMetrics(params));
     dispatch(fetchPaymentMethods(params));
     dispatch(fetchPeakHours(params));
     dispatch(fetchTopItems(params));
-
-    // Load financial health if client is selected
-    if (selectedClientId) {
-      dispatch(fetchFinancialHealth({ startDate, endDate, clientId: selectedClientId }));
-    } else {
-      dispatch(clearFinancialHealth());
-    }
-  };
+    dispatch(fetchFinancialHealth({ startDate, endDate, clientId: selectedClientId as number }));
+  }, [startDate, endDate, selectedClientId, dispatch]);
 
   useEffect(() => {
     dispatch(fetchClients());
   }, [dispatch]);
 
+  // Auto-select first client when clients load
   useEffect(() => {
-    loadReports();
-  }, []);
+    if (clients.length > 0 && !selectedClientId) {
+      setSelectedClientId(clients[0].id);
+    }
+  }, [clients, selectedClientId]);
+
+  // Load reports when client is selected
+  useEffect(() => {
+    if (selectedClientId) {
+      loadReports();
+    }
+  }, [loadReports, selectedClientId]);
 
   const handleApplyFilters = () => {
     loadReports();
   };
 
   const handleExportCSV = () => {
-    dispatch(exportCSV({ startDate, endDate, clientId: selectedClientId || undefined }));
+    // CRITICAL: Data isolation - REQUIRE clientId for CSV export
+    if (!selectedClientId) {
+      return; // Cannot export without client selection
+    }
+    dispatch(exportCSV({ startDate, endDate, clientId: selectedClientId as number }));
   };
 
   if (loading) {
@@ -82,6 +95,7 @@ const ReportsPage = () => {
         <div className="bg-white rounded-lg shadow p-4 sm:p-6 mb-4 sm:mb-6 animate-fade-up duration-normal">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 items-end">
             {/* Client Selector */}
+            {/* CRITICAL: Client selection required for data isolation */}
             <FormControl size="small" fullWidth className="animate-fade-right duration-very-fast">
               <InputLabel id="client-select-label">Cliente</InputLabel>
               <Select
@@ -90,9 +104,6 @@ const ReportsPage = () => {
                 label="Cliente"
                 onChange={(e) => setSelectedClientId(e.target.value as number | '')}
               >
-                <MenuItem value="">
-                  <em>Todos os clientes</em>
-                </MenuItem>
                 {clients.map((client) => (
                   <MenuItem key={client.id} value={client.id}>
                     {client.name}

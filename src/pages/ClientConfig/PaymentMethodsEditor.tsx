@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { updateClient } from '../../store/slices/clientSlice';
 import { Client, PaymentMethod } from '../../types';
-import { Button, Checkbox, FormControlLabel } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, Alert } from '@mui/material';
 import PaymentIcon from '@mui/icons-material/Payment';
 import PixIcon from '@mui/icons-material/Pix';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
@@ -27,19 +27,31 @@ const PaymentMethodsEditor = ({ client }: Props) => {
 
   const [selectedMethods, setSelectedMethods] = useState<PaymentMethod[]>(existingMethods);
   const [hasChanges, setHasChanges] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleSave = async () => {
+    setError(null);
+    setSuccess(null);
+
     const updatedConfiguration = {
       ...client.configuration,
       paymentMethods: selectedMethods
     };
 
-    await dispatch(updateClient({
+    const result = await dispatch(updateClient({
       clientId: client.id,
       configuration: updatedConfiguration
     }));
 
-    setHasChanges(false);
+    // ✅ Check if action succeeded
+    if (updateClient.fulfilled.match(result)) {
+      setSuccess('Métodos de pagamento salvos com sucesso!');
+      setHasChanges(false);
+      setTimeout(() => setSuccess(null), 3000);
+    } else {
+      setError(result.error?.message || 'Falha ao salvar métodos de pagamento');
+    }
   };
 
   const handleToggle = (method: PaymentMethod) => {
@@ -76,6 +88,17 @@ const PaymentMethodsEditor = ({ client }: Props) => {
       <p className="text-sm text-gray-600 mb-4 sm:mb-6 animate-fade-up duration-fast">
         Selecione os métodos de pagamento aceitos pelo seu negócio.
       </p>
+
+      {error && (
+        <Alert severity="error" onClose={() => setError(null)} className="mb-4 animate-fade-down duration-fast">
+          {error}
+        </Alert>
+      )}
+      {success && (
+        <Alert severity="success" onClose={() => setSuccess(null)} className="mb-4 animate-fade-down duration-fast">
+          {success}
+        </Alert>
+      )}
 
       <div className="space-y-3 sm:space-y-4">
         {PAYMENT_OPTIONS.map((option, index) => {

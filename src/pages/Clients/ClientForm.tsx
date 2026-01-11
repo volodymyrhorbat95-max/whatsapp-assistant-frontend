@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { createClient } from '../../store/slices/clientSlice';
-import { Button, IconButton, TextField, MenuItem } from '@mui/material';
+import { Button, IconButton, TextField, MenuItem, Alert } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 interface Props {
@@ -15,20 +15,67 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
   const [name, setName] = useState('');
   const [segment, setSegment] = useState<'delivery' | 'clothing'>('delivery');
   const [whatsappNumber, setWhatsappNumber] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [whatsappError, setWhatsappError] = useState<string | null>(null);
+
+  // Validate WhatsApp number format
+  const validateWhatsAppNumber = (number: string): boolean => {
+    setWhatsappError(null);
+
+    // Must start with +
+    if (!number.startsWith('+')) {
+      setWhatsappError('Número deve começar com +');
+      return false;
+    }
+
+    // Must be between 10-15 digits (including country code)
+    const digitsOnly = number.replace(/\D/g, '');
+    if (digitsOnly.length < 10 || digitsOnly.length > 15) {
+      setWhatsappError('Número inválido (mínimo 10 dígitos, máximo 15)');
+      return false;
+    }
+
+    // Brazilian format: +55 (2 digits) + DDD (2 digits) + Number (8-9 digits)
+    // Example: +5511999999999
+    const brazilianPattern = /^\+55\d{10,11}$/;
+    if (!brazilianPattern.test(number)) {
+      setWhatsappError('Formato brasileiro esperado: +55 + DDD + Número');
+      return false;
+    }
+
+    return true;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
+    // Validate WhatsApp number before submitting
+    if (!validateWhatsAppNumber(whatsappNumber)) {
+      return;
+    }
 
     // Button click → dispatch Redux action
-    await dispatch(createClient({
+    const result = await dispatch(createClient({
       name,
       segment,
       whatsappNumber,
       configuration: {}
     }));
 
-    onSuccess();
-    onClose();
+    // ✅ Check if action succeeded
+    if (createClient.fulfilled.match(result)) {
+      setSuccess('Cliente criado com sucesso!');
+      onSuccess();
+      // Close after showing success message briefly
+      setTimeout(() => onClose(), 1500);
+    } else {
+      // ✅ Show error to user
+      setError(result.error?.message || 'Falha ao criar cliente');
+      // ✅ Form stays open for correction
+    }
   };
 
   return (
@@ -42,6 +89,17 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+          {error && (
+            <Alert severity="error" onClose={() => setError(null)} className="animate-fade-down duration-fast">
+              {error}
+            </Alert>
+          )}
+          {success && (
+            <Alert severity="success" onClose={() => setSuccess(null)} className="animate-fade-down duration-fast">
+              {success}
+            </Alert>
+          )}
+
           <TextField
             label="Nome do Negócio"
             value={name}
@@ -51,6 +109,10 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
             placeholder="Ex: Pizzaria do João"
             className="animate-fade-up duration-fast"
             size="small"
+            slotProps={{
+              htmlInput: { maxLength: 255 }
+            }}
+            helperText={`${name.length}/255 caracteres`}
           />
 
           <TextField
@@ -74,7 +136,8 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
             required
             fullWidth
             placeholder="+5511999999999"
-            helperText="Formato: +55 + DDD + Número (sem espaços)"
+            helperText={whatsappError || "Formato: +55 + DDD + Número (sem espaços)"}
+            error={!!whatsappError}
             className="animate-fade-up duration-light-slow"
             size="small"
           />

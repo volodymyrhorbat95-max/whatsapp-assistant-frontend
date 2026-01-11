@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { updateClient } from '../../store/slices/clientSlice';
 import { Client, CustomMessages } from '../../types';
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, Alert } from '@mui/material';
 
 interface Props {
   client: Client;
@@ -17,19 +17,31 @@ const MessagesEditor = ({ client }: Props) => {
     client.configuration.messages || {}
   );
   const [hasChanges, setHasChanges] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleSave = async () => {
+    setError(null);
+    setSuccess(null);
+
     const updatedConfiguration = {
       ...client.configuration,
       messages
     };
 
-    await dispatch(updateClient({
+    const result = await dispatch(updateClient({
       clientId: client.id,
       configuration: updatedConfiguration
     }));
 
-    setHasChanges(false);
+    // ✅ Check if action succeeded
+    if (updateClient.fulfilled.match(result)) {
+      setSuccess('Mensagens salvas com sucesso!');
+      setHasChanges(false);
+      setTimeout(() => setSuccess(null), 3000);
+    } else {
+      setError(result.error?.message || 'Falha ao salvar mensagens');
+    }
   };
 
   const updateMessage = (field: keyof CustomMessages, value: string) => {
@@ -58,6 +70,17 @@ const MessagesEditor = ({ client }: Props) => {
           </Button>
         )}
       </div>
+
+      {error && (
+        <Alert severity="error" onClose={() => setError(null)} className="mb-4 animate-fade-down duration-fast">
+          {error}
+        </Alert>
+      )}
+      {success && (
+        <Alert severity="success" onClose={() => setSuccess(null)} className="mb-4 animate-fade-down duration-fast">
+          {success}
+        </Alert>
+      )}
 
       <div className="space-y-4 sm:space-y-6">
         <TextField

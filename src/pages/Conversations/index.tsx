@@ -1,28 +1,55 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { fetchConversations } from '../../store/slices/conversationSlice';
+import { fetchConversations, clearError } from '../../store/slices/conversationSlice';
+import { fetchClients } from '../../store/slices/clientSlice';
 import ConversationList from './ConversationList';
 import ConversationDetail from './ConversationDetail';
 import ConversationFilters from './ConversationFilters';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import { Alert, MenuItem, TextField } from '@mui/material';
 
 const ConversationsPage = () => {
   const dispatch = useAppDispatch();
-  const { list, current } = useAppSelector((state) => state.conversations);
+  const { list, current, error } = useAppSelector((state) => state.conversations);
+  const { clients } = useAppSelector((state) => state.client);
 
-  // Filter state
+  // Filter state - CRITICAL: clientId for multi-client data isolation
+  const [selectedClientId, setSelectedClientId] = useState<number | ''>('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [status, setStatus] = useState('');
   const [converted, setConverted] = useState('');
 
-  // Page load → dispatch Redux action
+  // Page load → dispatch Redux action to fetch clients
   useEffect(() => {
-    dispatch(fetchConversations());
+    dispatch(fetchClients());
   }, [dispatch]);
 
+  // Auto-select first client when clients load
+  useEffect(() => {
+    if (clients.length > 0 && !selectedClientId) {
+      setSelectedClientId(clients[0].id);
+    }
+  }, [clients, selectedClientId]);
+
+  // Fetch conversations when client is selected
+  useEffect(() => {
+    if (selectedClientId) {
+      dispatch(fetchConversations({ clientId: selectedClientId as number }));
+    }
+  }, [dispatch, selectedClientId]);
+
   const handleApplyFilters = () => {
-    dispatch(fetchConversations({ startDate, endDate, status, converted }));
+    if (!selectedClientId) {
+      return; // Cannot apply filters without client selection
+    }
+    dispatch(fetchConversations({
+      clientId: selectedClientId as number,
+      startDate,
+      endDate,
+      status,
+      converted
+    }));
   };
 
   const handleClearFilters = () => {
@@ -30,7 +57,13 @@ const ConversationsPage = () => {
     setEndDate('');
     setStatus('');
     setConverted('');
-    dispatch(fetchConversations());
+    if (selectedClientId) {
+      dispatch(fetchConversations({ clientId: selectedClientId as number }));
+    }
+  };
+
+  const handleCloseError = () => {
+    dispatch(clearError());
   };
 
   // useSelector reads data → UI renders
@@ -41,6 +74,31 @@ const ConversationsPage = () => {
         <div className="p-3 sm:p-4 border-b border-gray-200">
           <h1 className="text-lg sm:text-xl font-bold text-gray-800 animate-fade-down duration-very-fast">Conversas</h1>
           <p className="text-xs sm:text-sm text-gray-500 animate-fade-down duration-fast">{list.length} conversas</p>
+
+          {/* CRITICAL: Client Selection for Multi-Client Data Isolation */}
+          <TextField
+            select
+            fullWidth
+            size="small"
+            label="Selecionar Cliente"
+            value={selectedClientId}
+            onChange={(e) => setSelectedClientId(e.target.value === '' ? '' : Number(e.target.value))}
+            className="mt-2"
+            required
+          >
+            {clients.map((client) => (
+              <MenuItem key={client.id} value={client.id}>
+                {client.name} ({client.segment === 'delivery' ? 'Delivery' : 'Loja de Roupas'})
+              </MenuItem>
+            ))}
+          </TextField>
+
+          {/* Bug #6 Fix: Display API Errors */}
+          {error && (
+            <Alert severity="error" onClose={handleCloseError} className="mt-2">
+              {error}
+            </Alert>
+          )}
         </div>
         <ConversationFilters
           startDate={startDate}

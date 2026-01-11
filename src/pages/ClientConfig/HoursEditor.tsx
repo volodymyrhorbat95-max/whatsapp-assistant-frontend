@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { updateClient } from '../../store/slices/clientSlice';
 import { Client, OperatingHours } from '../../types';
-import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, TextField, Alert } from '@mui/material';
 
 interface Props {
   client: Client;
@@ -27,19 +27,31 @@ const HoursEditor = ({ client }: Props) => {
     client.configuration.operatingHours || {}
   );
   const [hasChanges, setHasChanges] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleSave = async () => {
+    setError(null);
+    setSuccess(null);
+
     const updatedConfiguration = {
       ...client.configuration,
       operatingHours: hours
     };
 
-    await dispatch(updateClient({
+    const result = await dispatch(updateClient({
       clientId: client.id,
       configuration: updatedConfiguration
     }));
 
-    setHasChanges(false);
+    // ✅ Check if action succeeded
+    if (updateClient.fulfilled.match(result)) {
+      setSuccess('Horários salvos com sucesso!');
+      setHasChanges(false);
+      setTimeout(() => setSuccess(null), 3000);
+    } else {
+      setError(result.error?.message || 'Falha ao salvar horários');
+    }
   };
 
   const updateDayHours = (day: string, field: 'open' | 'close', value: string) => {
@@ -81,6 +93,17 @@ const HoursEditor = ({ client }: Props) => {
           </Button>
         )}
       </div>
+
+      {error && (
+        <Alert severity="error" onClose={() => setError(null)} className="mb-4 animate-fade-down duration-fast">
+          {error}
+        </Alert>
+      )}
+      {success && (
+        <Alert severity="success" onClose={() => setSuccess(null)} className="mb-4 animate-fade-down duration-fast">
+          {success}
+        </Alert>
+      )}
 
       <div className="space-y-3 sm:space-y-4">
         {DAYS_OF_WEEK.map(({ key, label }, index) => {

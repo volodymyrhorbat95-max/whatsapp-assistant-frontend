@@ -1,10 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { setLoading } from './loadingSlice';
-import { Order, OrderStatus } from '../../types';
+import { Order, OrderStatus, OrderUpdateResponse } from '../../types';
 import { AppDispatch } from '../index';
-
-// API URL from .env - NEVER hardcoded
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+import { apiGet, apiPut } from '../../utils/api';
 
 interface OrderState {
   currentOrder: Order | null;
@@ -18,21 +16,15 @@ const initialState: OrderState = {
 
 // Async thunk: Update order status
 export const updateOrderStatus = createAsyncThunk<
-  Order,
-  { orderId: number; status: OrderStatus; notifyCustomer?: boolean },
+  OrderUpdateResponse,
+  { orderId: number; status: OrderStatus; notifyCustomer?: boolean; clientId: number },
   { dispatch: AppDispatch }
 >(
   'orders/updateStatus',
-  async ({ orderId, status, notifyCustomer = true }, { dispatch }) => {
+  async ({ orderId, status, notifyCustomer = true, clientId }, { dispatch }) => {
     dispatch(setLoading(true));
     try {
-      const response = await fetch(`${API_BASE_URL}/orders/${orderId}/status`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ status, notifyCustomer })
-      });
+      const response = await apiPut(`/orders/${orderId}/status`, { status, notifyCustomer, clientId });
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -56,7 +48,7 @@ export const fetchOrderById = createAsyncThunk<
   async (orderId, { dispatch }) => {
     dispatch(setLoading(true));
     try {
-      const response = await fetch(`${API_BASE_URL}/orders/${orderId}`);
+      const response = await apiGet(`/orders/${orderId}`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch order');

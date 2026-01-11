@@ -3,8 +3,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { setLoading } from './loadingSlice';
 import { AppDispatch } from '../index';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+import { authenticatedFetch } from '../../utils/api';
 
 export interface OverviewMetrics {
   conversationsStarted: number;
@@ -74,7 +73,7 @@ export const fetchOverviewMetrics = createAsyncThunk<
       const params = new URLSearchParams({ startDate, endDate });
       if (clientId) params.append('clientId', clientId.toString());
 
-      const response = await fetch(`${API_BASE_URL}/reports/overview?${params}`);
+      const response = await authenticatedFetch(`/reports/overview?${params}`);
       if (!response.ok) {
         throw new Error('Failed to fetch overview metrics');
       }
@@ -98,7 +97,7 @@ export const fetchPaymentMethods = createAsyncThunk<
       const params = new URLSearchParams({ startDate, endDate });
       if (clientId) params.append('clientId', clientId.toString());
 
-      const response = await fetch(`${API_BASE_URL}/reports/payment-methods?${params}`);
+      const response = await authenticatedFetch(`/reports/payment-methods?${params}`);
       if (!response.ok) {
         throw new Error('Failed to fetch payment methods');
       }
@@ -122,7 +121,7 @@ export const fetchPeakHours = createAsyncThunk<
       const params = new URLSearchParams({ startDate, endDate });
       if (clientId) params.append('clientId', clientId.toString());
 
-      const response = await fetch(`${API_BASE_URL}/reports/peak-hours?${params}`);
+      const response = await authenticatedFetch(`/reports/peak-hours?${params}`);
       if (!response.ok) {
         throw new Error('Failed to fetch peak hours');
       }
@@ -146,7 +145,7 @@ export const fetchTopItems = createAsyncThunk<
       const params = new URLSearchParams({ startDate, endDate });
       if (clientId) params.append('clientId', clientId.toString());
 
-      const response = await fetch(`${API_BASE_URL}/reports/top-items?${params}`);
+      const response = await authenticatedFetch(`/reports/top-items?${params}`);
       if (!response.ok) {
         throw new Error('Failed to fetch top items');
       }
@@ -170,7 +169,7 @@ export const exportCSV = createAsyncThunk<
       const params = new URLSearchParams({ startDate, endDate });
       if (clientId) params.append('clientId', clientId.toString());
 
-      const response = await fetch(`${API_BASE_URL}/reports/export-csv?${params}`);
+      const response = await authenticatedFetch(`/reports/export-csv?${params}`);
       if (!response.ok) {
         throw new Error('Failed to export CSV');
       }
@@ -207,7 +206,7 @@ export const fetchFinancialHealth = createAsyncThunk<
         clientId: clientId.toString()
       });
 
-      const response = await fetch(`${API_BASE_URL}/reports/financial-health?${params}`);
+      const response = await authenticatedFetch(`/reports/financial-health?${params}`);
       if (!response.ok) {
         throw new Error('Failed to fetch financial health');
       }

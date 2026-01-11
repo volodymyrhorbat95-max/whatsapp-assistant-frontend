@@ -4,8 +4,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { setLoading } from './loadingSlice';
 import { Client, ClientConfiguration } from '../../types';
 import { AppDispatch } from '../index';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+import { apiGet, apiPost, apiPut } from '../../utils/api';
 
 interface ClientState {
   clients: Client[];
@@ -29,9 +28,10 @@ export const fetchClients = createAsyncThunk<
   async (_, { dispatch }) => {
     dispatch(setLoading(true));
     try {
-      const response = await fetch(`${API_BASE_URL}/clients`);
+      const response = await apiGet('/clients');
       if (!response.ok) {
-        throw new Error('Failed to fetch clients');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch clients');
       }
       return await response.json();
     } finally {
@@ -50,9 +50,10 @@ export const fetchClient = createAsyncThunk<
   async (clientId, { dispatch }) => {
     dispatch(setLoading(true));
     try {
-      const response = await fetch(`${API_BASE_URL}/clients/${clientId}`);
+      const response = await apiGet(`/clients/${clientId}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch client');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch client');
       }
       return await response.json();
     } finally {
@@ -71,15 +72,10 @@ export const createClient = createAsyncThunk<
   async ({ name, segment, whatsappNumber, configuration }, { dispatch }) => {
     dispatch(setLoading(true));
     try {
-      const response = await fetch(`${API_BASE_URL}/clients`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name, segment, whatsappNumber, configuration })
-      });
+      const response = await apiPost('/clients', { name, segment, whatsappNumber, configuration });
       if (!response.ok) {
-        throw new Error('Failed to create client');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to create client');
       }
       return await response.json();
     } finally {
@@ -98,15 +94,10 @@ export const updateClient = createAsyncThunk<
   async ({ clientId, configuration }, { dispatch }) => {
     dispatch(setLoading(true));
     try {
-      const response = await fetch(`${API_BASE_URL}/clients/${clientId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ configuration })
-      });
+      const response = await apiPut(`/clients/${clientId}`, { configuration });
       if (!response.ok) {
-        throw new Error('Failed to update client');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to update client');
       }
       return await response.json();
     } finally {

@@ -41,14 +41,20 @@ const FinancialHealthCard = ({ data }: Props) => {
 
       {/* Input Fields Section */}
       <div className="bg-blue-50 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 animate-fade-right duration-fast">
-        <h3 className="text-sm font-medium text-blue-900 mb-3">Insira seus custos para calcular a margem</h3>
+        <h3 className="text-sm font-medium text-blue-900 mb-2">Insira seus custos para calcular a margem</h3>
+        <p className="text-xs text-orange-600 mb-3">
+          💡 Ajustes aqui são apenas para simulação. Para salvar custos permanentemente, vá em <strong>Configurações → Custos</strong>.
+        </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           {/* Fixed Costs Input */}
           <TextField
             label="Custos Fixos Mensais"
             type="number"
             value={fixedCosts}
-            onChange={(e) => setFixedCosts(parseFloat(e.target.value) || 0)}
+            onChange={(e) => {
+              const value = parseFloat(e.target.value) || 0;
+              setFixedCosts(Math.max(0, value)); // Ensure non-negative
+            }}
             size="small"
             fullWidth
             slotProps={{
@@ -66,7 +72,10 @@ const FinancialHealthCard = ({ data }: Props) => {
             label="Custo Variável (% da Receita)"
             type="number"
             value={variableCostPercent}
-            onChange={(e) => setVariableCostPercent(parseFloat(e.target.value) || 0)}
+            onChange={(e) => {
+              const value = parseFloat(e.target.value) || 0;
+              setVariableCostPercent(Math.max(0, Math.min(100, value))); // Clamp between 0-100
+            }}
             size="small"
             fullWidth
             slotProps={{

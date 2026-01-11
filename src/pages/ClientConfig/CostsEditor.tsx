@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { updateClient } from '../../store/slices/clientSlice';
 import { Client, BusinessCosts } from '../../types';
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, Alert } from '@mui/material';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import PercentIcon from '@mui/icons-material/Percent';
 
@@ -22,8 +22,13 @@ const CostsEditor = ({ client }: Props) => {
     existingCosts.variableCostPercent || 0
   );
   const [hasChanges, setHasChanges] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const handleSave = async () => {
+    setError(null);
+    setSuccess(null);
+
     const costs: BusinessCosts = {
       fixedCosts,
       variableCostPercent
@@ -34,12 +39,19 @@ const CostsEditor = ({ client }: Props) => {
       costs
     };
 
-    await dispatch(updateClient({
+    const result = await dispatch(updateClient({
       clientId: client.id,
       configuration: updatedConfiguration
     }));
 
-    setHasChanges(false);
+    // ✅ Check if action succeeded
+    if (updateClient.fulfilled.match(result)) {
+      setSuccess('Custos salvos com sucesso!');
+      setHasChanges(false);
+      setTimeout(() => setSuccess(null), 3000);
+    } else {
+      setError(result.error?.message || 'Falha ao salvar custos');
+    }
   };
 
   const handleFixedCostsChange = (value: number) => {
@@ -75,6 +87,17 @@ const CostsEditor = ({ client }: Props) => {
         Configure os custos do seu negócio para calcular a estimativa de margem de lucro nos relatórios.
       </p>
 
+      {error && (
+        <Alert severity="error" onClose={() => setError(null)} className="mb-4 animate-fade-down duration-fast">
+          {error}
+        </Alert>
+      )}
+      {success && (
+        <Alert severity="success" onClose={() => setSuccess(null)} className="mb-4 animate-fade-down duration-fast">
+          {success}
+        </Alert>
+      )}
+
       <div className="space-y-4 sm:space-y-6">
         {/* Fixed Costs */}
         <div className="p-3 sm:p-4 border border-gray-200 rounded-lg animate-fade-right duration-normal">
@@ -90,7 +113,10 @@ const CostsEditor = ({ client }: Props) => {
           <TextField
             type="number"
             value={fixedCosts}
-            onChange={(e) => handleFixedCostsChange(parseFloat(e.target.value) || 0)}
+            onChange={(e) => {
+              const value = parseFloat(e.target.value) || 0;
+              handleFixedCostsChange(Math.max(0, value)); // Ensure non-negative
+            }}
             size="small"
             fullWidth
             slotProps={{
@@ -117,7 +143,10 @@ const CostsEditor = ({ client }: Props) => {
           <TextField
             type="number"
             value={variableCostPercent}
-            onChange={(e) => handleVariableCostChange(parseFloat(e.target.value) || 0)}
+            onChange={(e) => {
+              const value = parseFloat(e.target.value) || 0;
+              handleVariableCostChange(Math.max(0, Math.min(100, value))); // Clamp 0-100
+            }}
             size="small"
             fullWidth
             slotProps={{

@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Button, MenuItem, TextField } from '@mui/material';
+import { Button, MenuItem, TextField, Alert } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import PendingIcon from '@mui/icons-material/Pending';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import { ConversationWithMessages, OrderStatus } from '../../types';
+import { ConversationWithMessages, OrderStatus, OrderUpdateResponse } from '../../types';
 import { useAppDispatch } from '../../store/hooks';
 import { updateOrderStatus } from '../../store/slices/orderSlice';
 import { fetchConversationById } from '../../store/slices/conversationSlice';
@@ -50,6 +50,12 @@ const ConversationDetail = ({ conversation }: Props) => {
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus | ''>('');
   const [notifyCustomer, setNotifyCustomer] = useState(true);
 
+  // Bug #5 Fix: Track notification status
+  const [notificationMessage, setNotificationMessage] = useState<{
+    type: 'success' | 'warning' | 'error';
+    text: string;
+  } | null>(null);
+
   // Format date to PT-BR
   const formatDate = (date: Date | string) => {
     return new Date(date).toLocaleString('pt-BR', {
@@ -65,11 +71,36 @@ const ConversationDetail = ({ conversation }: Props) => {
   const handleStatusUpdate = async () => {
     if (!conversation.order || !selectedStatus) return;
 
-    await dispatch(updateOrderStatus({
+    const result = await dispatch(updateOrderStatus({
       orderId: conversation.order.id,
       status: selectedStatus,
-      notifyCustomer
+      notifyCustomer,
+      clientId: conversation.clientId  // CRITICAL: Include clientId for security validation
     }));
+
+    // Bug #5 Fix: Display notification status feedback with proper typing
+    if (result.payload && typeof result.payload === 'object' && 'notification' in result.payload) {
+      const response = result.payload as OrderUpdateResponse;
+      if (response.notification.status === 'sent') {
+        setNotificationMessage({
+          type: 'success',
+          text: 'Status atualizado e cliente notificado via WhatsApp!'
+        });
+      } else if (response.notification.status === 'failed') {
+        setNotificationMessage({
+          type: 'warning',
+          text: `Status atualizado, mas falha ao notificar cliente: ${response.notification.error || 'Erro desconhecido'}`
+        });
+      } else {
+        setNotificationMessage({
+          type: 'success',
+          text: 'Status atualizado com sucesso!'
+        });
+      }
+
+      // Clear message after 5 seconds
+      setTimeout(() => setNotificationMessage(null), 5000);
+    }
 
     // Refresh conversation to get updated order
     dispatch(fetchConversationById(conversation.id));
@@ -142,6 +173,7 @@ const ConversationDetail = ({ conversation }: Props) => {
                   className="animate-fade-down duration-normal"
                 >
                   <MenuItem value="">Selecione...</MenuItem>
+                  <MenuItem value="pending">Pendente</MenuItem>
                   <MenuItem value="confirmed">Confirmado</MenuItem>
                   <MenuItem value="preparing">Preparando</MenuItem>
                   <MenuItem value="out_for_delivery">Saiu para Entrega</MenuItem>
@@ -169,6 +201,17 @@ const ConversationDetail = ({ conversation }: Props) => {
                 >
                   Atualizar
                 </Button>
+
+                {/* Bug #5 Fix: Display notification status feedback */}
+                {notificationMessage && (
+                  <Alert
+                    severity={notificationMessage.type}
+                    onClose={() => setNotificationMessage(null)}
+                    className="text-xs animate-fade-up duration-fast"
+                  >
+                    {notificationMessage.text}
+                  </Alert>
+                )}
               </div>
             </div>
 
@@ -179,7 +222,12 @@ const ConversationDetail = ({ conversation }: Props) => {
                 <ul className="text-xs text-blue-700 space-y-1">
                   {conversation.order.items.map((item, idx) => (
                     <li key={idx} className="flex justify-between">
-                      <span>{item.quantity}x {item.name}</span>
+                      <span>
+                        {item.quantity}x {item.name}
+                        {item.size && ` - ${item.size}`}
+                        {item.color && ` - ${item.color}`}
+                        {item.gender && ` (${item.gender === 'masculino' ? 'Masc' : item.gender === 'feminino' ? 'Fem' : ''})`}
+                      </span>
                       <span>R$ {(item.price * item.quantity).toFixed(2)}</span>
                     </li>
                   ))}

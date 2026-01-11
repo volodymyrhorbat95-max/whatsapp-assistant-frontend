@@ -2,9 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { setLoading } from './loadingSlice';
 import { ConversationListItem, ConversationWithMessages } from '../../types';
 import { AppDispatch } from '../index';
-
-// API URL from .env - NEVER hardcoded
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+import { authenticatedFetch } from '../../utils/api';
 
 interface ConversationState {
   list: ConversationListItem[];
@@ -21,17 +19,23 @@ const initialState: ConversationState = {
 // Async thunk: Fetch all conversations with filters
 export const fetchConversations = createAsyncThunk<
   ConversationListItem[],
-  { startDate?: string; endDate?: string; status?: string; converted?: string } | void,
+  { startDate?: string; endDate?: string; status?: string; converted?: string; clientId?: number } | void,
   { dispatch: AppDispatch }
 >(
   'conversations/fetchAll',
   async (filters, { dispatch }) => {
     dispatch(setLoading(true));
     try {
-      let url = `${API_BASE_URL}/conversations`;
+      let url = '/conversations';
 
       if (filters) {
         const params = new URLSearchParams();
+
+        // CRITICAL: clientId is required for multi-client data isolation
+        if (filters.clientId) {
+          params.append('clientId', filters.clientId.toString());
+        }
+
         if (filters.startDate) params.append('startDate', filters.startDate);
         if (filters.endDate) params.append('endDate', filters.endDate);
         if (filters.status) params.append('status', filters.status);
@@ -43,9 +47,10 @@ export const fetchConversations = createAsyncThunk<
         }
       }
 
-      const response = await fetch(url);
+      const response = await authenticatedFetch(url);
       if (!response.ok) {
-        throw new Error('Failed to fetch conversations');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to fetch conversations');
       }
       return await response.json();
     } finally {
@@ -64,7 +69,7 @@ export const fetchConversationById = createAsyncThunk<
   async (id, { dispatch }) => {
     dispatch(setLoading(true));
     try {
-      const response = await fetch(`${API_BASE_URL}/conversations/${id}`);
+      const response = await authenticatedFetch(`/conversations/${id}`);
       if (!response.ok) {
         throw new Error('Failed to fetch conversation');
       }
