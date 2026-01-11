@@ -153,23 +153,15 @@ const CatalogEditor = ({ client }: Props) => {
                   {isClothingStore && (
                     <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-2">
                       <TextField
-                        select
                         value={item.size || ''}
                         onChange={(e) => updateItem(categoryIndex, itemIndex, 'size', e.target.value)}
-                        placeholder="Tamanho"
+                        placeholder="Tamanho (ex: M, 38, 40)"
                         size="small"
                         label="Tamanho"
                         sx={{ flex: 1 }}
                         fullWidth
-                      >
-                        <MenuItem value="">Nenhum</MenuItem>
-                        <MenuItem value="PP">PP</MenuItem>
-                        <MenuItem value="P">P</MenuItem>
-                        <MenuItem value="M">M</MenuItem>
-                        <MenuItem value="G">G</MenuItem>
-                        <MenuItem value="GG">GG</MenuItem>
-                        <MenuItem value="XG">XG</MenuItem>
-                      </TextField>
+                        helperText="Use letras (PP, P, M, G) ou números (36, 38, 40)"
+                      />
                       <TextField
                         value={item.color || ''}
                         onChange={(e) => updateItem(categoryIndex, itemIndex, 'color', e.target.value)}

@@ -130,6 +130,18 @@ const MessagesEditor = ({ client }: Props) => {
           helperText="Mensagem exibida quando o bot não entende a entrada do cliente"
           className="animate-fade-right duration-light-slow"
         />
+
+        <TextField
+          label="Mensagem de Fechado"
+          value={messages.closedMessage || ''}
+          onChange={(e) => updateMessage('closedMessage', e.target.value)}
+          placeholder="Olá! No momento estamos fechados. Deixe sua mensagem que retornaremos em breve!"
+          multiline
+          rows={3}
+          fullWidth
+          helperText="Mensagem exibida quando o cliente envia mensagem fora do horário de funcionamento"
+          className="animate-fade-right duration-slow"
+        />
       </div>
 
       {/* Preview */}

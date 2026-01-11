@@ -23,8 +23,25 @@ const DAYS_OF_WEEK = [
 
 const HoursEditor = ({ client }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
+
+  // Sanitize operating hours data - remove any invalid entries
+  const sanitizeHours = (rawHours: OperatingHours | undefined): OperatingHours => {
+    if (!rawHours) return {};
+
+    const cleaned: OperatingHours = {};
+    Object.keys(rawHours).forEach((day) => {
+      const dayHours = rawHours[day];
+      // Only include if both open and close are valid time strings (HH:MM format)
+      if (dayHours && dayHours.open && dayHours.close &&
+          /^\d{2}:\d{2}$/.test(dayHours.open) && /^\d{2}:\d{2}$/.test(dayHours.close)) {
+        cleaned[day] = dayHours;
+      }
+    });
+    return cleaned;
+  };
+
   const [hours, setHours] = useState<OperatingHours>(
-    client.configuration.operatingHours || {}
+    sanitizeHours(client.configuration.operatingHours)
   );
   const [hasChanges, setHasChanges] = useState(false);
   const [error, setError] = useState<string | null>(null);
