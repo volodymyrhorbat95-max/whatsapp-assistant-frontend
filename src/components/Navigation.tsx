@@ -41,7 +41,7 @@ const Navigation = () => {
       position="fixed"
       elevation={0}
       sx={{
-        backgroundColor: 'rgba(66, 153, 225, 0.7)',
+        backgroundColor: 'hsla(219, 94%, 53%, 0.94)',
         backdropFilter: 'blur(10px)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.2)'
       }}
