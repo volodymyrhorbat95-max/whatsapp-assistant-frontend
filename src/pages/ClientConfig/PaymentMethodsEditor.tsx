@@ -1,6 +1,6 @@
 // Payment Methods Editor - Edit accepted payment methods
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { updateClient } from '../../store/slices/clientSlice';
@@ -29,6 +29,11 @@ const PaymentMethodsEditor = ({ client }: Props) => {
   const [hasChanges, setHasChanges] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  // Sync local state when client prop updates (after save)
+  useEffect(() => {
+    setSelectedMethods(client.configuration.paymentMethods || []);
+  }, [client.configuration.paymentMethods]);
 
   const handleSave = async () => {
     setError(null);

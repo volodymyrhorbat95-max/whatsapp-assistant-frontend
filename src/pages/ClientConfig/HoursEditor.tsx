@@ -1,6 +1,6 @@
 // Hours Editor - Edit operating hours for each day of the week
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { updateClient } from '../../store/slices/clientSlice';
@@ -46,6 +46,11 @@ const HoursEditor = ({ client }: Props) => {
   const [hasChanges, setHasChanges] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  // Sync local state when client prop updates (after save)
+  useEffect(() => {
+    setHours(sanitizeHours(client.configuration.operatingHours));
+  }, [client.configuration.operatingHours]);
 
   const handleSave = async () => {
     setError(null);

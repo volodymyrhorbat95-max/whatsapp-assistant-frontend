@@ -1,6 +1,6 @@
 // Catalog Editor - Edit menu items and prices for all client types
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { updateClient } from '../../store/slices/clientSlice';
@@ -24,6 +24,11 @@ const CatalogEditor = ({ client }: Props) => {
 
   // Check if this is a clothing store to show size/color/gender fields
   const isClothingStore = client.segment === 'clothing';
+
+  // Sync local state when client prop updates (after save)
+  useEffect(() => {
+    setCatalog(client.configuration.catalog || []);
+  }, [client.configuration.catalog]);
 
   const handleSave = async () => {
     setError(null);
@@ -53,10 +58,14 @@ const CatalogEditor = ({ client }: Props) => {
   };
 
   const addItem = (categoryIndex: number) => {
-    const newCatalog = [...catalog];
-    newCatalog[categoryIndex].items.push({
-      name: '',
-      price: 0
+    const newCatalog = catalog.map((category, idx) => {
+      if (idx === categoryIndex) {
+        return {
+          ...category,
+          items: [...category.items, { name: '', price: 0 }]
+        };
+      }
+      return category;
     });
     setCatalog(newCatalog);
     setHasChanges(true);
@@ -68,15 +77,34 @@ const CatalogEditor = ({ client }: Props) => {
     field: keyof CatalogItem,
     value: string | number
   ) => {
-    const newCatalog = [...catalog];
-    newCatalog[categoryIndex].items[itemIndex][field] = value as never;
+    const newCatalog = catalog.map((category, catIdx) => {
+      if (catIdx === categoryIndex) {
+        return {
+          ...category,
+          items: category.items.map((item, itmIdx) => {
+            if (itmIdx === itemIndex) {
+              return { ...item, [field]: value };
+            }
+            return item;
+          })
+        };
+      }
+      return category;
+    });
     setCatalog(newCatalog);
     setHasChanges(true);
   };
 
   const removeItem = (categoryIndex: number, itemIndex: number) => {
-    const newCatalog = [...catalog];
-    newCatalog[categoryIndex].items.splice(itemIndex, 1);
+    const newCatalog = catalog.map((category, idx) => {
+      if (idx === categoryIndex) {
+        return {
+          ...category,
+          items: category.items.filter((_, itemIdx) => itemIdx !== itemIndex)
+        };
+      }
+      return category;
+    });
     setCatalog(newCatalog);
     setHasChanges(true);
   };

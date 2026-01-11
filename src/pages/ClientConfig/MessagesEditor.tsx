@@ -1,6 +1,6 @@
 // Messages Editor - Edit custom bot messages
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { updateClient } from '../../store/slices/clientSlice';
@@ -19,6 +19,11 @@ const MessagesEditor = ({ client }: Props) => {
   const [hasChanges, setHasChanges] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  // Sync local state when client prop updates (after save)
+  useEffect(() => {
+    setMessages(client.configuration.messages || {});
+  }, [client.configuration.messages]);
 
   const handleSave = async () => {
     setError(null);

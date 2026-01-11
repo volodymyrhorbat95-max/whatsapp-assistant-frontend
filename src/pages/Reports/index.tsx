@@ -132,22 +132,19 @@ const ReportsPage = () => {
           <FinancialHealthCard data={financialHealth} />
         )}
 
-        {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
-          {/* Payment Methods Chart */}
-          {paymentMethods.length > 0 && (
-            <div className="animate-fade-right duration-slow">
-              <PaymentMethodsChart data={paymentMethods} />
-            </div>
-          )}
+        {/* Payment Methods Chart */}
+        {paymentMethods.length > 0 && (
+          <div className="mb-4 sm:mb-6 animate-fade-right duration-slow">
+            <PaymentMethodsChart data={paymentMethods} />
+          </div>
+        )}
 
-          {/* Peak Hours Chart */}
-          {peakHours.length > 0 && (
-            <div className="animate-fade-left duration-slow">
-              <PeakHoursChart data={peakHours} />
-            </div>
-          )}
-        </div>
+        {/* Peak Hours Chart - Full Width */}
+        {peakHours.length > 0 && (
+          <div className="mb-4 sm:mb-6 animate-fade-up duration-slow">
+            <PeakHoursChart data={peakHours} />
+          </div>
+        )}
 
         {/* Top Items List */}
         {topItems.length > 0 && (

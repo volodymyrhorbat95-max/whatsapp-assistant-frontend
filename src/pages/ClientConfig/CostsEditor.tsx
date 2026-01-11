@@ -1,6 +1,6 @@
 // Costs Editor - Edit fixed and variable costs for margin estimation
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { updateClient } from '../../store/slices/clientSlice';
@@ -24,6 +24,13 @@ const CostsEditor = ({ client }: Props) => {
   const [hasChanges, setHasChanges] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  // Sync local state when client prop updates (after save)
+  useEffect(() => {
+    const costs = client.configuration.costs || {};
+    setFixedCosts(costs.fixedCosts || 0);
+    setVariableCostPercent(costs.variableCostPercent || 0);
+  }, [client.configuration.costs]);
 
   const handleSave = async () => {
     setError(null);
