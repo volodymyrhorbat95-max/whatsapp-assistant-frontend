@@ -17,7 +17,6 @@ const ClientConfig = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const { currentClient } = useSelector((state: RootState) => state.client);
-  const loading = useSelector((state: RootState) => state.loading.isLoading);
   const [activeTab, setActiveTab] = useState<TabType>('catalog');
 
   useEffect(() => {
@@ -25,10 +24,6 @@ const ClientConfig = () => {
       dispatch(fetchClient(parseInt(id, 10)));
     }
   }, [id, dispatch]);
-
-  if (loading) {
-    return null; // Global spinner will show
-  }
 
   if (!currentClient) {
     return (

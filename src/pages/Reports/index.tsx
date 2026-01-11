@@ -22,7 +22,6 @@ const ReportsPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { overview, paymentMethods, peakHours, topItems, financialHealth } = useSelector((state: RootState) => state.reports);
   const { clients } = useSelector((state: RootState) => state.client);
-  const loading = useSelector((state: RootState) => state.loading.isLoading);
 
   // Default date range: last 30 days
   const today = new Date();
@@ -77,10 +76,6 @@ const ReportsPage = () => {
     }
     dispatch(exportCSV({ startDate, endDate, clientId: selectedClientId as number }));
   };
-
-  if (loading) {
-    return null; // Global spinner will show
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
