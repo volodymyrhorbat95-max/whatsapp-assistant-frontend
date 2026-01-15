@@ -54,10 +54,12 @@ const initialState: ReportsState = {
   error: null
 };
 
+// CRITICAL: clientId is REQUIRED for multi-client data isolation
+// Backend will reject requests without clientId (returns 400 Bad Request)
 interface FetchReportsParams {
   startDate: string;
   endDate: string;
-  clientId?: number;
+  clientId: number;  // Required - backend rejects requests without it
 }
 
 // Fetch overview metrics
@@ -70,8 +72,12 @@ export const fetchOverviewMetrics = createAsyncThunk<
   async ({ startDate, endDate, clientId }, { dispatch }) => {
     dispatch(setLoading(true));
     try {
-      const params = new URLSearchParams({ startDate, endDate });
-      if (clientId) params.append('clientId', clientId.toString());
+      // clientId is always required - include in all requests
+      const params = new URLSearchParams({
+        startDate,
+        endDate,
+        clientId: clientId.toString()
+      });
 
       const response = await authenticatedFetch(`/reports/overview?${params}`);
       if (!response.ok) {
@@ -94,8 +100,12 @@ export const fetchPaymentMethods = createAsyncThunk<
   async ({ startDate, endDate, clientId }, { dispatch }) => {
     dispatch(setLoading(true));
     try {
-      const params = new URLSearchParams({ startDate, endDate });
-      if (clientId) params.append('clientId', clientId.toString());
+      // clientId is always required - include in all requests
+      const params = new URLSearchParams({
+        startDate,
+        endDate,
+        clientId: clientId.toString()
+      });
 
       const response = await authenticatedFetch(`/reports/payment-methods?${params}`);
       if (!response.ok) {
@@ -118,8 +128,12 @@ export const fetchPeakHours = createAsyncThunk<
   async ({ startDate, endDate, clientId }, { dispatch }) => {
     dispatch(setLoading(true));
     try {
-      const params = new URLSearchParams({ startDate, endDate });
-      if (clientId) params.append('clientId', clientId.toString());
+      // clientId is always required - include in all requests
+      const params = new URLSearchParams({
+        startDate,
+        endDate,
+        clientId: clientId.toString()
+      });
 
       const response = await authenticatedFetch(`/reports/peak-hours?${params}`);
       if (!response.ok) {
@@ -142,8 +156,12 @@ export const fetchTopItems = createAsyncThunk<
   async ({ startDate, endDate, clientId }, { dispatch }) => {
     dispatch(setLoading(true));
     try {
-      const params = new URLSearchParams({ startDate, endDate });
-      if (clientId) params.append('clientId', clientId.toString());
+      // clientId is always required - include in all requests
+      const params = new URLSearchParams({
+        startDate,
+        endDate,
+        clientId: clientId.toString()
+      });
 
       const response = await authenticatedFetch(`/reports/top-items?${params}`);
       if (!response.ok) {
@@ -166,8 +184,12 @@ export const exportCSV = createAsyncThunk<
   async ({ startDate, endDate, clientId }, { dispatch }) => {
     dispatch(setLoading(true));
     try {
-      const params = new URLSearchParams({ startDate, endDate });
-      if (clientId) params.append('clientId', clientId.toString());
+      // clientId is always required - include in all requests
+      const params = new URLSearchParams({
+        startDate,
+        endDate,
+        clientId: clientId.toString()
+      });
 
       const response = await authenticatedFetch(`/reports/export-csv?${params}`);
       if (!response.ok) {

@@ -103,7 +103,8 @@ const ConversationDetail = ({ conversation }: Props) => {
     }
 
     // Refresh conversation to get updated order
-    dispatch(fetchConversationById(conversation.id));
+    // CRITICAL: clientId is required for multi-client data isolation
+    dispatch(fetchConversationById({ id: conversation.id, clientId: conversation.clientId }));
     setSelectedStatus('');
   };
 

@@ -5,9 +5,13 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { updateClient } from '../../store/slices/clientSlice';
 import { Client, CatalogCategory, CatalogItem } from '../../types';
-import { Button, TextField, MenuItem, Alert } from '@mui/material';
+import { Button, TextField, MenuItem, Alert, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import CategoryIcon from '@mui/icons-material/Category';
 
 interface Props {
   client: Client;
@@ -21,6 +25,9 @@ const CatalogEditor = ({ client }: Props) => {
   const [hasChanges, setHasChanges] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [editingCategoryIndex, setEditingCategoryIndex] = useState<number | null>(null);
+  const [editingCategoryName, setEditingCategoryName] = useState('');
 
   // Check if this is a clothing store to show size/color/gender fields
   const isClothingStore = client.segment === 'clothing';
@@ -109,6 +116,60 @@ const CatalogEditor = ({ client }: Props) => {
     setHasChanges(true);
   };
 
+  // Add new category
+  const addCategory = () => {
+    if (!newCategoryName.trim()) {
+      return;
+    }
+    const newCategory: CatalogCategory = {
+      category: newCategoryName.trim(),
+      items: []
+    };
+    setCatalog([...catalog, newCategory]);
+    setNewCategoryName('');
+    setHasChanges(true);
+  };
+
+  // Update category name
+  const updateCategoryName = (categoryIndex: number) => {
+    if (!editingCategoryName.trim()) {
+      setEditingCategoryIndex(null);
+      return;
+    }
+    const newCatalog = catalog.map((category, idx) => {
+      if (idx === categoryIndex) {
+        return {
+          ...category,
+          category: editingCategoryName.trim()
+        };
+      }
+      return category;
+    });
+    setCatalog(newCatalog);
+    setEditingCategoryIndex(null);
+    setEditingCategoryName('');
+    setHasChanges(true);
+  };
+
+  // Start editing category name
+  const startEditingCategory = (categoryIndex: number) => {
+    setEditingCategoryIndex(categoryIndex);
+    setEditingCategoryName(catalog[categoryIndex].category);
+  };
+
+  // Cancel editing category name
+  const cancelEditingCategory = () => {
+    setEditingCategoryIndex(null);
+    setEditingCategoryName('');
+  };
+
+  // Remove category
+  const removeCategory = (categoryIndex: number) => {
+    const newCatalog = catalog.filter((_, idx) => idx !== categoryIndex);
+    setCatalog(newCatalog);
+    setHasChanges(true);
+  };
+
   return (
     <div className="bg-white rounded-sm shadow p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 mb-4 sm:mb-6">
@@ -142,9 +203,66 @@ const CatalogEditor = ({ client }: Props) => {
       <div className="space-y-6 sm:space-y-8">
         {catalog.map((category, categoryIndex) => (
           <div key={categoryIndex} className={`border border-gray-200 rounded-sm p-3 sm:p-4 animate-zoom-in duration-${categoryIndex % 2 === 0 ? 'normal' : 'light-slow'}`}>
-            <h3 className="text-sm sm:text-md font-semibold text-gray-900 mb-3 sm:mb-4 animate-fade-right duration-very-fast">
-              {category.category}
-            </h3>
+            {/* Category Header with Edit/Delete */}
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3 sm:mb-4">
+              {editingCategoryIndex === categoryIndex ? (
+                <div className="flex items-center gap-2 flex-1">
+                  <TextField
+                    value={editingCategoryName}
+                    onChange={(e) => setEditingCategoryName(e.target.value)}
+                    size="small"
+                    placeholder="Nome da categoria"
+                    sx={{ flex: 1 }}
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        updateCategoryName(categoryIndex);
+                      } else if (e.key === 'Escape') {
+                        cancelEditingCategory();
+                      }
+                    }}
+                  />
+                  <IconButton
+                    onClick={() => updateCategoryName(categoryIndex)}
+                    size="small"
+                    color="primary"
+                    title="Salvar"
+                  >
+                    <CheckIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    onClick={cancelEditingCategory}
+                    size="small"
+                    title="Cancelar"
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <CategoryIcon fontSize="small" className="text-gray-500" />
+                  <h3 className="text-sm sm:text-md font-semibold text-gray-900 animate-fade-right duration-very-fast">
+                    {category.category}
+                  </h3>
+                  <IconButton
+                    onClick={() => startEditingCategory(categoryIndex)}
+                    size="small"
+                    title="Editar nome da categoria"
+                  >
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+                </div>
+              )}
+              <Button
+                onClick={() => removeCategory(categoryIndex)}
+                variant="outlined"
+                color="error"
+                size="small"
+                startIcon={<DeleteIcon />}
+              >
+                Remover Categoria
+              </Button>
+            </div>
 
             <div className="space-y-3">
               {category.items.map((item, itemIndex) => (
@@ -248,9 +366,39 @@ const CatalogEditor = ({ client }: Props) => {
 
       {catalog.length === 0 && (
         <div className="text-center py-8 sm:py-12 text-sm sm:text-base text-gray-500 animate-fade-up duration-normal">
-          Nenhuma categoria cadastrada
+          Nenhuma categoria cadastrada. Adicione uma categoria abaixo.
         </div>
       )}
+
+      {/* Add New Category Section */}
+      <div className="mt-6 sm:mt-8 p-3 sm:p-4 border-2 border-dashed border-gray-300 rounded-sm animate-fade-up duration-slow">
+        <h3 className="text-sm font-medium text-gray-700 mb-3">
+          Adicionar Nova Categoria
+        </h3>
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+          <TextField
+            value={newCategoryName}
+            onChange={(e) => setNewCategoryName(e.target.value)}
+            placeholder={isClothingStore ? 'Ex: Camisetas, Calças, Vestidos' : 'Ex: Hambúrgueres, Pizzas, Bebidas'}
+            size="small"
+            fullWidth
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                addCategory();
+              }
+            }}
+          />
+          <Button
+            onClick={addCategory}
+            variant="contained"
+            startIcon={<AddIcon />}
+            disabled={!newCategoryName.trim()}
+            sx={{ minWidth: { sm: '180px' } }}
+          >
+            Adicionar
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

@@ -39,19 +39,21 @@ export const updateOrderStatus = createAsyncThunk<
 );
 
 // Async thunk: Fetch order by ID
+// CRITICAL: clientId is required for multi-client data isolation
 export const fetchOrderById = createAsyncThunk<
   Order,
-  number,
+  { orderId: number; clientId: number },
   { dispatch: AppDispatch }
 >(
   'orders/fetchById',
-  async (orderId, { dispatch }) => {
+  async ({ orderId, clientId }, { dispatch }) => {
     dispatch(setLoading(true));
     try {
-      const response = await apiGet(`/orders/${orderId}`);
+      const response = await apiGet(`/orders/${orderId}?clientId=${clientId}`);
 
       if (!response.ok) {
-        throw new Error('Failed to fetch order');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to fetch order');
       }
 
       return await response.json();

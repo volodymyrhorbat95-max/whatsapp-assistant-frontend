@@ -11,8 +11,9 @@ const ConversationList = ({ conversations }: Props) => {
   const { current } = useAppSelector((state) => state.conversations);
 
   // Button click → dispatch Redux action
-  const handleClick = (id: number) => {
-    dispatch(fetchConversationById(id));
+  // CRITICAL: clientId is required for multi-client data isolation
+  const handleClick = (id: number, clientId: number) => {
+    dispatch(fetchConversationById({ id, clientId }));
   };
 
   // Format date to PT-BR
@@ -77,7 +78,7 @@ const ConversationList = ({ conversations }: Props) => {
         return (
           <div
             key={conv.id}
-            onClick={() => handleClick(conv.id)}
+            onClick={() => handleClick(conv.id, conv.clientId)}
             className={`p-3 sm:p-4 cursor-pointer hover:bg-gray-50 transition-colors animate-${direction} duration-${duration} ${
               current?.id === conv.id ? 'bg-blue-50 border-l-4 border-blue-500' : ''
             }`}

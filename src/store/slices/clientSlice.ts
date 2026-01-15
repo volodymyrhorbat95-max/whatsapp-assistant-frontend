@@ -2,7 +2,7 @@
 
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { setLoading } from './loadingSlice';
-import { Client, ClientConfiguration } from '../../types';
+import { Client, ClientConfiguration, ClientSegment } from '../../types';
 import { AppDispatch } from '../index';
 import { apiGet, apiPost, apiPut } from '../../utils/api';
 
@@ -63,9 +63,10 @@ export const fetchClient = createAsyncThunk<
 );
 
 // Create new client
+// segment must be 'delivery' or 'clothing' - enforced by ClientSegment type
 export const createClient = createAsyncThunk<
   Client,
-  { name: string; segment: string; whatsappNumber: string; configuration?: ClientConfiguration },
+  { name: string; segment: ClientSegment; whatsappNumber: string; configuration?: ClientConfiguration },
   { dispatch: AppDispatch }
 >(
   'client/createClient',

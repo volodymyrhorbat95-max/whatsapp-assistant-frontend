@@ -17,35 +17,27 @@ const initialState: ConversationState = {
 };
 
 // Async thunk: Fetch all conversations with filters
+// CRITICAL: clientId is REQUIRED for multi-client data isolation
+// Backend will reject requests without clientId (returns 400 Bad Request)
 export const fetchConversations = createAsyncThunk<
   ConversationListItem[],
-  { startDate?: string; endDate?: string; status?: string; converted?: string; clientId?: number } | void,
+  { clientId: number; startDate?: string; endDate?: string; status?: string; converted?: string },
   { dispatch: AppDispatch }
 >(
   'conversations/fetchAll',
   async (filters, { dispatch }) => {
     dispatch(setLoading(true));
     try {
-      let url = '/conversations';
+      // clientId is always required - include in all requests
+      const params = new URLSearchParams();
+      params.append('clientId', filters.clientId.toString());
 
-      if (filters) {
-        const params = new URLSearchParams();
+      if (filters.startDate) params.append('startDate', filters.startDate);
+      if (filters.endDate) params.append('endDate', filters.endDate);
+      if (filters.status) params.append('status', filters.status);
+      if (filters.converted) params.append('converted', filters.converted);
 
-        // CRITICAL: clientId is required for multi-client data isolation
-        if (filters.clientId) {
-          params.append('clientId', filters.clientId.toString());
-        }
-
-        if (filters.startDate) params.append('startDate', filters.startDate);
-        if (filters.endDate) params.append('endDate', filters.endDate);
-        if (filters.status) params.append('status', filters.status);
-        if (filters.converted) params.append('converted', filters.converted);
-
-        const queryString = params.toString();
-        if (queryString) {
-          url += `?${queryString}`;
-        }
-      }
+      const url = `/conversations?${params.toString()}`;
 
       const response = await authenticatedFetch(url);
       if (!response.ok) {
@@ -60,18 +52,20 @@ export const fetchConversations = createAsyncThunk<
 );
 
 // Async thunk: Fetch single conversation with messages
+// CRITICAL: clientId is required for multi-client data isolation
 export const fetchConversationById = createAsyncThunk<
   ConversationWithMessages,
-  number,
+  { id: number; clientId: number },
   { dispatch: AppDispatch }
 >(
   'conversations/fetchById',
-  async (id, { dispatch }) => {
+  async ({ id, clientId }, { dispatch }) => {
     dispatch(setLoading(true));
     try {
-      const response = await authenticatedFetch(`/conversations/${id}`);
+      const response = await authenticatedFetch(`/conversations/${id}?clientId=${clientId}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch conversation');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to fetch conversation');
       }
       return await response.json();
     } finally {
