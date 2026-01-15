@@ -52,6 +52,52 @@ const coreMessages: MessageFieldDef[] = [
     label: 'Mensagem de Fechado',
     placeholder: 'Olá! No momento estamos fechados. Deixe sua mensagem que retornaremos em breve!',
     helperText: 'Mensagem exibida quando o cliente envia mensagem fora do horário de funcionamento'
+  },
+  {
+    key: 'closedMessageWithHours',
+    label: 'Mensagem de Fechado (com horário)',
+    placeholder: 'Olá! No momento estamos fechados. Nosso horário é das {open} às {close}. Deixe sua mensagem!',
+    helperText: 'Mensagem com horário dinâmico. Use {open} e {close} para os horários do dia.'
+  }
+];
+
+// Order status notification messages (sent when business updates order status)
+const statusNotificationMessages: MessageFieldDef[] = [
+  {
+    key: 'statusPending',
+    label: 'Pedido Pendente',
+    placeholder: 'Seu pedido está pendente.',
+    helperText: 'Notificação quando pedido está pendente'
+  },
+  {
+    key: 'statusConfirmed',
+    label: 'Pedido Confirmado',
+    placeholder: 'Seu pedido foi confirmado!',
+    helperText: 'Notificação quando pedido é confirmado'
+  },
+  {
+    key: 'statusPreparing',
+    label: 'Pedido em Preparo',
+    placeholder: 'Seu pedido está sendo preparado! 🍳',
+    helperText: 'Notificação quando pedido está sendo preparado'
+  },
+  {
+    key: 'statusOutForDelivery',
+    label: 'Pedido Saiu para Entrega',
+    placeholder: 'Seu pedido saiu para entrega! 🚗',
+    helperText: 'Notificação quando pedido saiu para entrega'
+  },
+  {
+    key: 'statusDelivered',
+    label: 'Pedido Entregue',
+    placeholder: 'Seu pedido foi entregue! Obrigado pela preferência! 🎉',
+    helperText: 'Notificação quando pedido foi entregue'
+  },
+  {
+    key: 'statusCancelled',
+    label: 'Pedido Cancelado',
+    placeholder: 'Seu pedido foi cancelado.',
+    helperText: 'Notificação quando pedido é cancelado'
   }
 ];
 
@@ -94,6 +140,40 @@ const audioErrorMessages: MessageFieldDef[] = [
     label: 'Erro ao Processar Mensagem',
     placeholder: 'Desculpe, ocorreu um erro ao processar sua mensagem. Por favor, tente novamente em alguns minutos.',
     helperText: 'Mensagem quando ocorre erro ao processar mensagem do cliente'
+  }
+];
+
+// Menu display messages for delivery
+const menuDisplayMessages: MessageFieldDef[] = [
+  {
+    key: 'menuNotAvailable',
+    label: 'Cardápio Indisponível',
+    placeholder: 'Desculpe, o cardápio não está disponível no momento.',
+    helperText: 'Mensagem quando cardápio está vazio ou indisponível'
+  },
+  {
+    key: 'menuHeader',
+    label: 'Cabeçalho do Cardápio',
+    placeholder: '📋 *Nosso Cardápio:*',
+    helperText: 'Texto exibido no topo do cardápio'
+  },
+  {
+    key: 'menuFooter',
+    label: 'Rodapé do Cardápio',
+    placeholder: 'Qual categoria você gostaria?',
+    helperText: 'Texto exibido após as categorias do cardápio'
+  },
+  {
+    key: 'categoryNoItems',
+    label: 'Categoria Sem Itens',
+    placeholder: 'Desculpe, não temos itens disponíveis em {category} no momento.',
+    helperText: 'Mensagem quando categoria está vazia. Use {category} para nome.'
+  },
+  {
+    key: 'categoryItemsFooter',
+    label: 'Rodapé dos Itens',
+    placeholder: 'Qual você gostaria?',
+    helperText: 'Texto exibido após listar itens de uma categoria'
   }
 ];
 
@@ -181,6 +261,22 @@ const deliveryFlowMessages: MessageFieldDef[] = [
     label: 'Pedido Já Confirmado',
     placeholder: 'Seu pedido já foi confirmado! Se precisar de algo mais, é só chamar.',
     helperText: 'Mensagem quando cliente envia mensagem após confirmação'
+  }
+];
+
+// Clothing product display messages
+const clothingDisplayMessages: MessageFieldDef[] = [
+  {
+    key: 'optionsHeader',
+    label: 'Cabeçalho de Opções',
+    placeholder: 'Temos essas opções:',
+    helperText: 'Texto exibido antes de listar opções de produtos'
+  },
+  {
+    key: 'productSelected',
+    label: 'Produto Selecionado',
+    placeholder: 'Ótimo! {product} por R$ {price}.',
+    helperText: 'Mensagem ao selecionar produto. Use {product} e {price} para valores.'
   }
 ];
 
@@ -398,7 +494,7 @@ const MessagesEditor = ({ client }: Props) => {
         {renderSection(
           'core',
           'Mensagens Principais',
-          '5 mensagens - Saudação, confirmação, despedida, fallback e fechado',
+          '6 mensagens - Saudação, confirmação, despedida, fallback e fechado',
           coreMessages
         )}
 
@@ -416,11 +512,32 @@ const MessagesEditor = ({ client }: Props) => {
           audioErrorMessages
         )}
 
+        {renderSection(
+          'status',
+          'Notificações de Status do Pedido',
+          '6 mensagens - Enviadas ao cliente quando você atualiza o status do pedido',
+          statusNotificationMessages
+        )}
+
+        {client.segment === 'delivery' && renderSection(
+          'menu',
+          'Exibição do Cardápio',
+          '5 mensagens - Cabeçalho, rodapé e mensagens do cardápio',
+          menuDisplayMessages
+        )}
+
         {client.segment === 'delivery' && renderSection(
           'delivery',
           'Fluxo de Delivery',
           '14 mensagens - Todo o fluxo de pedidos de delivery',
           deliveryFlowMessages
+        )}
+
+        {client.segment === 'clothing' && renderSection(
+          'clothingDisplay',
+          'Exibição de Produtos',
+          '2 mensagens - Cabeçalho de opções e seleção de produto',
+          clothingDisplayMessages
         )}
 
         {client.segment === 'clothing' && renderSection(
