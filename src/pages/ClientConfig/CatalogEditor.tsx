@@ -41,6 +41,24 @@ const CatalogEditor = ({ client }: Props) => {
     setError(null);
     setSuccess(null);
 
+    // ✅ Frontend validation before API call
+    for (const category of catalog) {
+      if (!category.category.trim()) {
+        setError('O nome da categoria não pode estar vazio');
+        return;
+      }
+      for (const item of category.items) {
+        if (!item.name.trim()) {
+          setError(`Preencha o nome do item na categoria "${category.category}"`);
+          return;
+        }
+        if (item.price < 0) {
+          setError(`O preço não pode ser negativo para "${item.name}"`);
+          return;
+        }
+      }
+    }
+
     const updatedConfiguration = {
       ...client.configuration,
       catalog
