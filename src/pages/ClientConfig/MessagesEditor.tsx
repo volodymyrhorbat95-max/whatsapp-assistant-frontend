@@ -264,6 +264,40 @@ const deliveryFlowMessages: MessageFieldDef[] = [
   }
 ];
 
+// Order summary labels (delivery) - CRITICAL for "Mandatory Confirmation Before Creating Orders"
+const orderSummaryMessages: MessageFieldDef[] = [
+  {
+    key: 'orderSummaryHeader',
+    label: 'Cabeçalho do Resumo',
+    placeholder: '*📝 Resumo do Pedido:*',
+    helperText: 'Título exibido no topo do resumo do pedido'
+  },
+  {
+    key: 'orderSummaryItems',
+    label: 'Rótulo Itens',
+    placeholder: '*Itens:*',
+    helperText: 'Rótulo antes da lista de itens'
+  },
+  {
+    key: 'orderSummaryTotal',
+    label: 'Rótulo Total',
+    placeholder: '*Total:*',
+    helperText: 'Rótulo antes do valor total'
+  },
+  {
+    key: 'orderSummaryAddress',
+    label: 'Rótulo Endereço',
+    placeholder: '*Endereço:*',
+    helperText: 'Rótulo antes do endereço de entrega'
+  },
+  {
+    key: 'orderSummaryPayment',
+    label: 'Rótulo Pagamento',
+    placeholder: '*Pagamento:*',
+    helperText: 'Rótulo antes da forma de pagamento'
+  }
+];
+
 // Clothing product display messages
 const clothingDisplayMessages: MessageFieldDef[] = [
   {
@@ -277,6 +311,52 @@ const clothingDisplayMessages: MessageFieldDef[] = [
     label: 'Produto Selecionado',
     placeholder: 'Ótimo! {product} por R$ {price}.',
     helperText: 'Mensagem ao selecionar produto. Use {product} e {price} para valores.'
+  }
+];
+
+// Reservation summary labels (clothing) - CRITICAL for "Mandatory Confirmation Before Creating Orders"
+const reservationSummaryMessages: MessageFieldDef[] = [
+  {
+    key: 'reservationSummaryHeader',
+    label: 'Cabeçalho do Resumo',
+    placeholder: '📋 Resumo da Reserva:',
+    helperText: 'Título exibido no topo do resumo da reserva'
+  },
+  {
+    key: 'reservationSummaryProduct',
+    label: 'Rótulo Produto',
+    placeholder: '🛍️ Produto:',
+    helperText: 'Rótulo antes do nome do produto'
+  },
+  {
+    key: 'reservationSummarySize',
+    label: 'Rótulo Tamanho',
+    placeholder: '📏 Tamanho:',
+    helperText: 'Rótulo antes do tamanho'
+  },
+  {
+    key: 'reservationSummaryColor',
+    label: 'Rótulo Cor',
+    placeholder: '🎨 Cor:',
+    helperText: 'Rótulo antes da cor'
+  },
+  {
+    key: 'reservationSummaryPrice',
+    label: 'Rótulo Valor',
+    placeholder: '💰 Valor:',
+    helperText: 'Rótulo antes do preço'
+  },
+  {
+    key: 'reservationSummaryDelivery',
+    label: 'Rótulo Entrega',
+    placeholder: '📦 Entrega:',
+    helperText: 'Rótulo antes do endereço de entrega'
+  },
+  {
+    key: 'reservationSummaryPickup',
+    label: 'Texto Retirada',
+    placeholder: '📦 Retirar na loja',
+    helperText: 'Texto exibido quando cliente vai retirar na loja'
   }
 ];
 
@@ -533,11 +613,25 @@ const MessagesEditor = ({ client }: Props) => {
           deliveryFlowMessages
         )}
 
+        {client.segment === 'delivery' && renderSection(
+          'orderSummary',
+          'Resumo do Pedido (Confirmação)',
+          '5 rótulos - Exibidos antes da confirmação obrigatória',
+          orderSummaryMessages
+        )}
+
         {client.segment === 'clothing' && renderSection(
           'clothingDisplay',
           'Exibição de Produtos',
           '2 mensagens - Cabeçalho de opções e seleção de produto',
           clothingDisplayMessages
+        )}
+
+        {client.segment === 'clothing' && renderSection(
+          'reservationSummary',
+          'Resumo da Reserva (Confirmação)',
+          '7 rótulos - Exibidos antes da confirmação obrigatória',
+          reservationSummaryMessages
         )}
 
         {client.segment === 'clothing' && renderSection(
