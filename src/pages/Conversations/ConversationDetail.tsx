@@ -56,6 +56,26 @@ const ConversationDetail = ({ conversation }: Props) => {
     text: string;
   } | null>(null);
 
+  // Determine if order involves delivery (not pickup)
+  // For clothing orders: check collectedData.deliveryType or if address is not "Retirar na loja"
+  // For delivery orders: always involves delivery
+  const isDeliveryOrder = (): boolean => {
+    // Delivery flow always involves delivery
+    if (conversation.flowType === 'delivery') {
+      return true;
+    }
+    // Clothing flow: check deliveryType from collectedData
+    if (conversation.collectedData?.deliveryType === 'delivery') {
+      return true;
+    }
+    // Fallback: check if deliveryAddress exists and is not pickup text
+    if (conversation.order?.deliveryAddress &&
+        conversation.order.deliveryAddress !== 'Retirar na loja') {
+      return true;
+    }
+    return false;
+  };
+
   // Format date to PT-BR
   const formatDate = (date: Date | string) => {
     return new Date(date).toLocaleString('pt-BR', {
@@ -177,7 +197,10 @@ const ConversationDetail = ({ conversation }: Props) => {
                   <MenuItem value="pending">Pendente</MenuItem>
                   <MenuItem value="confirmed">Confirmado</MenuItem>
                   <MenuItem value="preparing">Preparando</MenuItem>
-                  <MenuItem value="out_for_delivery">Saiu para Entrega</MenuItem>
+                  {/* Only show "Out for Delivery" if order involves delivery (not pickup) */}
+                  {isDeliveryOrder() && (
+                    <MenuItem value="out_for_delivery">Saiu para Entrega</MenuItem>
+                  )}
                   <MenuItem value="delivered">Entregue</MenuItem>
                   <MenuItem value="cancelled">Cancelado</MenuItem>
                 </TextField>
