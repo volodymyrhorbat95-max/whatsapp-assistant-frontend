@@ -54,12 +54,26 @@ const Navigation = () => {
             flexGrow: 1,
             fontWeight: 'bold',
             fontSize: { xs: '1rem', sm: '1.25rem' },
-            color: 'white'
+            color: 'white',
+            display: { xs: 'none', sm: 'block' }
           }}
           className="animate-fade-right duration-fast"
         >
-          <span className="hidden sm:inline">Assistente Virtual WhatsApp</span>
-          <span className="sm:hidden">WhatsApp Bot</span>
+          Assistente Virtual WhatsApp
+        </Typography>
+        <Typography
+          variant="h6"
+          component="h1"
+          sx={{
+            flexGrow: 1,
+            fontWeight: 'bold',
+            fontSize: { xs: '1rem', sm: '1.25rem' },
+            color: 'white',
+            display: { xs: 'block', sm: 'none' }
+          }}
+          className="animate-fade-right duration-fast"
+        >
+          WhatsApp Bot
         </Typography>
 
         <Box sx={{ display: 'flex', gap: { xs: 0.5, sm: 1 } }}>
@@ -71,6 +85,7 @@ const Navigation = () => {
               variant={isActive(item.path) ? 'contained' : 'text'}
               color={isActive(item.path) ? 'primary' : 'inherit'}
               className={animationClasses[index]}
+              aria-label={item.label}
               sx={{
                 fontSize: { xs: '0.75rem', sm: '0.875rem' },
                 padding: { xs: '4px 8px', sm: '6px 16px' },
@@ -78,11 +93,15 @@ const Navigation = () => {
                 color: isActive(item.path) ? undefined : 'white',
                 '&:hover': {
                   backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                },
+                '& .MuiButton-startIcon': {
+                  mr: { xs: 0, sm: 1 }
                 }
               }}
             >
-              <span className="hidden sm:inline">{item.label}</span>
-              <span className="sm:hidden sr-only">{item.label}</span>
+              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                {item.label}
+              </Box>
             </Button>
           ))}
         </Box>
