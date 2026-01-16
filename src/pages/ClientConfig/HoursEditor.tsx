@@ -77,23 +77,31 @@ const HoursEditor = ({ client }: Props) => {
   };
 
   const updateDayHours = (day: string, field: 'open' | 'close', value: string) => {
-    const newHours = { ...hours };
-    if (!newHours[day]) {
-      newHours[day] = { open: '', close: '' };
-    }
-    newHours[day][field] = value;
-    setHours(newHours);
+    setHours(prevHours => {
+      const existingDay = prevHours[day] || { open: '', close: '' };
+      return {
+        ...prevHours,
+        [day]: {
+          ...existingDay,
+          [field]: value
+        }
+      };
+    });
     setHasChanges(true);
   };
 
   const toggleDay = (day: string) => {
-    const newHours = { ...hours };
-    if (newHours[day]) {
-      delete newHours[day];
-    } else {
-      newHours[day] = { open: '09:00', close: '18:00' };
-    }
-    setHours(newHours);
+    setHours(prevHours => {
+      if (prevHours[day]) {
+        const { [day]: _, ...rest } = prevHours;
+        return rest;
+      } else {
+        return {
+          ...prevHours,
+          [day]: { open: '09:00', close: '18:00' }
+        };
+      }
+    });
     setHasChanges(true);
   };
 
