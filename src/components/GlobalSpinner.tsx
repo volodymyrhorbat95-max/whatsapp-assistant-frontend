@@ -1,19 +1,34 @@
+import { Backdrop, CircularProgress, Typography, Box } from '@mui/material';
 import { useAppSelector } from '../store/hooks';
 
 const GlobalSpinner = () => {
   const isLoading = useAppSelector((state) => state.loading.isLoading);
 
-  if (!isLoading) {
-    return null;
-  }
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-sm p-6 flex flex-col items-center">
-        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-4 text-gray-700">Carregando...</p>
-      </div>
-    </div>
+    <Backdrop
+      sx={{
+        color: '#fff',
+        zIndex: (theme) => theme.zIndex.drawer + 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+      }}
+      open={isLoading}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          bgcolor: 'white',
+          borderRadius: '2px',
+          p: 3
+        }}
+      >
+        <CircularProgress size={48} />
+        <Typography sx={{ mt: 2, color: 'text.secondary' }}>
+          Carregando...
+        </Typography>
+      </Box>
+    </Backdrop>
   );
 };
 

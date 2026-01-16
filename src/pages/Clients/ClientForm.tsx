@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { createClient } from '../../store/slices/clientSlice';
-import { Button, IconButton, TextField, MenuItem, Alert } from '@mui/material';
+import { Button, IconButton, TextField, MenuItem, Alert, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 interface Props {
@@ -103,23 +103,34 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-sm shadow-xl p-4 sm:p-6 w-full max-w-md animate-zoom-in duration-fast">
-        <div className="flex justify-between items-center mb-4 sm:mb-6">
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900 animate-fade-right duration-very-fast">Novo Cliente</h2>
-          <IconButton onClick={onClose} size="small" className="animate-fade-left duration-very-fast">
-            <CloseIcon />
-          </IconButton>
-        </div>
+    <Dialog
+      open={true}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      slotProps={{
+        paper: {
+          className: 'animate-zoom-in duration-fast',
+          sx: { borderRadius: '2px' }
+        }
+      }}
+    >
+      <DialogTitle className="flex justify-between items-center">
+        <span className="text-lg sm:text-xl font-bold text-gray-900">Novo Cliente</span>
+        <IconButton onClick={onClose} size="small">
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
 
-        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+      <DialogContent>
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 pt-2">
           {error && (
-            <Alert severity="error" onClose={() => setError(null)} className="animate-fade-down duration-fast">
+            <Alert severity="error" onClose={() => setError(null)}>
               {error}
             </Alert>
           )}
           {success && (
-            <Alert severity="success" onClose={() => setSuccess(null)} className="animate-fade-down duration-fast">
+            <Alert severity="success" onClose={() => setSuccess(null)}>
               {success}
             </Alert>
           )}
@@ -131,7 +142,6 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
             required
             fullWidth
             placeholder="Ex: Pizzaria do João"
-            className="animate-fade-up duration-fast"
             size="small"
             disabled={isLoading}
             error={!!nameError}
@@ -148,7 +158,6 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
             required
             fullWidth
             select
-            className="animate-fade-up duration-normal"
             size="small"
             disabled={isLoading}
           >
@@ -165,35 +174,31 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
             placeholder="+5511999999999"
             helperText={whatsappError || "Formato: +55 + DDD + Número (sem espaços)"}
             error={!!whatsappError}
-            className="animate-fade-up duration-light-slow"
             size="small"
             disabled={isLoading}
           />
-
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 sm:pt-4">
-            <Button
-              type="button"
-              onClick={onClose}
-              variant="outlined"
-              fullWidth
-              disabled={isLoading}
-              className="animate-fade-right duration-normal"
-            >
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              disabled={isLoading}
-              className="animate-fade-left duration-normal"
-            >
-              {isLoading ? 'Criando...' : 'Criar Cliente'}
-            </Button>
-          </div>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+
+      <DialogActions sx={{ px: 3, pb: 2, pt: 1, gap: 1 }}>
+        <Button
+          onClick={onClose}
+          variant="outlined"
+          fullWidth
+          disabled={isLoading}
+        >
+          Cancelar
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          variant="contained"
+          fullWidth
+          disabled={isLoading}
+        >
+          {isLoading ? 'Criando...' : 'Criar Cliente'}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
