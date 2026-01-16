@@ -1,5 +1,6 @@
 import { Button, TextField } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
+import { useAppSelector } from '../../store/hooks';
 
 interface Props {
   startDate: string;
@@ -18,6 +19,7 @@ const DateRangePicker = ({
   onApply,
   onExport
 }: Props) => {
+  const { isLoading } = useAppSelector((state) => state.loading);
   return (
     <>
       <TextField
@@ -48,9 +50,10 @@ const DateRangePicker = ({
         variant="contained"
         size="small"
         fullWidth
+        disabled={isLoading}
         className="animate-fade-left duration-light-slow"
       >
-        Aplicar
+        {isLoading ? 'Aplicando...' : 'Aplicar'}
       </Button>
 
       {/* Export CSV Button */}
@@ -61,9 +64,10 @@ const DateRangePicker = ({
         size="small"
         startIcon={<DownloadIcon />}
         fullWidth
+        disabled={isLoading}
         className="animate-fade-left duration-slow"
       >
-        Exportar CSV
+        {isLoading ? 'Exportando...' : 'Exportar CSV'}
       </Button>
     </>
   );

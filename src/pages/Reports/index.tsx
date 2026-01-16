@@ -1,27 +1,27 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   fetchOverviewMetrics,
   fetchPaymentMethods,
   fetchPeakHours,
   fetchTopItems,
   fetchFinancialHealth,
-  exportCSV
+  exportCSV,
+  clearError
 } from '../../store/slices/reportsSlice';
-import { fetchClients } from '../../store/slices/clientSlice';
+import { fetchClients, clearError as clearClientError } from '../../store/slices/clientSlice';
 import OverviewCards from './OverviewCards';
 import PaymentMethodsChart from './PaymentMethodsChart';
 import PeakHoursChart from './PeakHoursChart';
 import TopItemsList from './TopItemsList';
 import DateRangePicker from './DateRangePicker';
 import FinancialHealthCard from './FinancialHealthCard';
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem, Alert } from '@mui/material';
 
 const ReportsPage = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { overview, paymentMethods, peakHours, topItems, financialHealth } = useSelector((state: RootState) => state.reports);
-  const { clients } = useSelector((state: RootState) => state.client);
+  const dispatch = useAppDispatch();
+  const { overview, paymentMethods, peakHours, topItems, financialHealth, error } = useAppSelector((state) => state.reports);
+  const { clients, error: clientError } = useAppSelector((state) => state.client);
 
   // Default date range: last 30 days
   const today = new Date();
@@ -77,6 +77,14 @@ const ReportsPage = () => {
     dispatch(exportCSV({ startDate, endDate, clientId: selectedClientId as number }));
   };
 
+  const handleCloseError = () => {
+    dispatch(clearError());
+  };
+
+  const handleCloseClientError = () => {
+    dispatch(clearClientError());
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
       <div className="max-w-7xl mx-auto">
@@ -84,6 +92,18 @@ const ReportsPage = () => {
         <div className="mb-4 sm:mb-6">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 animate-fade-down duration-very-fast">Relatórios</h1>
           <p className="text-sm sm:text-base text-gray-600 mt-1 animate-fade-down duration-fast">Métricas e análises de conversas</p>
+
+          {/* Error Alerts */}
+          {error && (
+            <Alert severity="error" onClose={handleCloseError} className="mt-3">
+              {error}
+            </Alert>
+          )}
+          {clientError && (
+            <Alert severity="error" onClose={handleCloseClientError} className="mt-3">
+              {clientError}
+            </Alert>
+          )}
         </div>
 
         {/* Filters Row */}

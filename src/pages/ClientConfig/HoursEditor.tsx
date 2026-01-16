@@ -1,8 +1,7 @@
 // Hours Editor - Edit operating hours for each day of the week
 
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { updateClient } from '../../store/slices/clientSlice';
 import { Client, OperatingHours } from '../../types';
 import { Button, Checkbox, FormControlLabel, TextField, Alert } from '@mui/material';
@@ -22,7 +21,8 @@ const DAYS_OF_WEEK = [
 ];
 
 const HoursEditor = ({ client }: Props) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => state.loading);
 
   // Sanitize operating hours data - remove any invalid entries
   const sanitizeHours = (rawHours: OperatingHours | undefined): OperatingHours => {
@@ -109,9 +109,10 @@ const HoursEditor = ({ client }: Props) => {
             variant="contained"
             className="animate-fade-left duration-fast"
             fullWidth
+            disabled={isLoading}
             sx={{ maxWidth: { sm: '200px' } }}
           >
-            Salvar Alterações
+            {isLoading ? 'Salvando...' : 'Salvar Alterações'}
           </Button>
         )}
       </div>

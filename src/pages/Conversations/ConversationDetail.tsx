@@ -7,7 +7,7 @@ import PendingIcon from '@mui/icons-material/Pending';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import { ConversationWithMessages, OrderStatus, OrderUpdateResponse } from '../../types';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { updateOrderStatus } from '../../store/slices/orderSlice';
 import { fetchConversationById } from '../../store/slices/conversationSlice';
 
@@ -47,6 +47,7 @@ const STATUS_COLORS: Record<OrderStatus, string> = {
 
 const ConversationDetail = ({ conversation }: Props) => {
   const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => state.loading);
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus | ''>('');
   const [notifyCustomer, setNotifyCustomer] = useState(true);
 
@@ -97,6 +98,17 @@ const ConversationDetail = ({ conversation }: Props) => {
       notifyCustomer,
       clientId: conversation.clientId  // CRITICAL: Include clientId for security validation
     }));
+
+    // Handle rejected action (API error)
+    if (updateOrderStatus.rejected.match(result)) {
+      setNotificationMessage({
+        type: 'error',
+        text: result.error?.message || 'Erro ao atualizar status do pedido'
+      });
+      // Clear message after 5 seconds
+      setTimeout(() => setNotificationMessage(null), 5000);
+      return;
+    }
 
     // Bug #5 Fix: Display notification status feedback with proper typing
     if (result.payload && typeof result.payload === 'object' && 'notification' in result.payload) {
@@ -219,11 +231,11 @@ const ConversationDetail = ({ conversation }: Props) => {
                   variant="contained"
                   size="small"
                   onClick={handleStatusUpdate}
-                  disabled={!selectedStatus}
+                  disabled={!selectedStatus || isLoading}
                   fullWidth
                   className="animate-fade-up duration-slow"
                 >
-                  Atualizar
+                  {isLoading ? 'Atualizando...' : 'Atualizar'}
                 </Button>
 
                 {/* Bug #5 Fix: Display notification status feedback */}

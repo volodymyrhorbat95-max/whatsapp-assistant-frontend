@@ -1,8 +1,7 @@
 // Payment Methods Editor - Edit accepted payment methods
 
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { updateClient } from '../../store/slices/clientSlice';
 import { Client, PaymentMethod } from '../../types';
 import { Button, Checkbox, FormControlLabel, Alert } from '@mui/material';
@@ -22,7 +21,8 @@ const PAYMENT_OPTIONS: { value: PaymentMethod; label: string; icon: JSX.Element 
 ];
 
 const PaymentMethodsEditor = ({ client }: Props) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => state.loading);
   const existingMethods = client.configuration.paymentMethods || [];
 
   const [selectedMethods, setSelectedMethods] = useState<PaymentMethod[]>(existingMethods);
@@ -83,9 +83,10 @@ const PaymentMethodsEditor = ({ client }: Props) => {
             variant="contained"
             className="animate-fade-left duration-fast"
             fullWidth
+            disabled={isLoading}
             sx={{ maxWidth: { sm: '200px' } }}
           >
-            Salvar Alterações
+            {isLoading ? 'Salvando...' : 'Salvar Alterações'}
           </Button>
         )}
       </div>

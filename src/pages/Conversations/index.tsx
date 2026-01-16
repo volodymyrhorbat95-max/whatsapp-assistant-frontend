@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchConversations, clearError } from '../../store/slices/conversationSlice';
-import { fetchClients } from '../../store/slices/clientSlice';
+import { fetchClients, clearError as clearClientError } from '../../store/slices/clientSlice';
 import ConversationList from './ConversationList';
 import ConversationDetail from './ConversationDetail';
 import ConversationFilters from './ConversationFilters';
@@ -11,7 +11,7 @@ import { Alert, MenuItem, TextField } from '@mui/material';
 const ConversationsPage = () => {
   const dispatch = useAppDispatch();
   const { list, current, error } = useAppSelector((state) => state.conversations);
-  const { clients } = useAppSelector((state) => state.client);
+  const { clients, error: clientError } = useAppSelector((state) => state.client);
 
   // Filter state - CRITICAL: clientId for multi-client data isolation
   const [selectedClientId, setSelectedClientId] = useState<number | ''>('');
@@ -66,6 +66,10 @@ const ConversationsPage = () => {
     dispatch(clearError());
   };
 
+  const handleCloseClientError = () => {
+    dispatch(clearClientError());
+  };
+
   // useSelector reads data → UI renders
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-100">
@@ -97,6 +101,11 @@ const ConversationsPage = () => {
           {error && (
             <Alert severity="error" onClose={handleCloseError} className="mt-2">
               {error}
+            </Alert>
+          )}
+          {clientError && (
+            <Alert severity="error" onClose={handleCloseClientError} className="mt-2">
+              {clientError}
             </Alert>
           )}
         </div>

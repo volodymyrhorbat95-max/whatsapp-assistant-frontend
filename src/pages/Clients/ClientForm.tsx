@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { createClient } from '../../store/slices/clientSlice';
 import { Button, IconButton, TextField, MenuItem, Alert } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -11,13 +10,33 @@ interface Props {
 }
 
 const ClientForm = ({ onClose, onSuccess }: Props) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => state.loading);
   const [name, setName] = useState('');
   const [segment, setSegment] = useState<'delivery' | 'clothing'>('delivery');
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [whatsappError, setWhatsappError] = useState<string | null>(null);
+  const [nameError, setNameError] = useState<string | null>(null);
+
+  // Validate business name
+  const validateName = (value: string): boolean => {
+    setNameError(null);
+
+    const trimmed = value.trim();
+    if (trimmed.length === 0) {
+      setNameError('Nome do negócio é obrigatório');
+      return false;
+    }
+
+    if (trimmed.length < 2) {
+      setNameError('Nome deve ter pelo menos 2 caracteres');
+      return false;
+    }
+
+    return true;
+  };
 
   // Validate WhatsApp number format
   const validateWhatsAppNumber = (number: string): boolean => {
@@ -51,6 +70,11 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+
+    // Validate name before submitting
+    if (!validateName(name)) {
+      return;
+    }
 
     // Validate WhatsApp number before submitting
     if (!validateWhatsAppNumber(whatsappNumber)) {
@@ -109,10 +133,12 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
             placeholder="Ex: Pizzaria do João"
             className="animate-fade-up duration-fast"
             size="small"
+            disabled={isLoading}
+            error={!!nameError}
             slotProps={{
               htmlInput: { maxLength: 255 }
             }}
-            helperText={`${name.length}/255 caracteres`}
+            helperText={nameError || `${name.length}/255 caracteres`}
           />
 
           <TextField
@@ -124,6 +150,7 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
             select
             className="animate-fade-up duration-normal"
             size="small"
+            disabled={isLoading}
           >
             <MenuItem value="delivery">Delivery</MenuItem>
             <MenuItem value="clothing">Vestuário</MenuItem>
@@ -140,6 +167,7 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
             error={!!whatsappError}
             className="animate-fade-up duration-light-slow"
             size="small"
+            disabled={isLoading}
           />
 
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 sm:pt-4">
@@ -148,6 +176,7 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
               onClick={onClose}
               variant="outlined"
               fullWidth
+              disabled={isLoading}
               className="animate-fade-right duration-normal"
             >
               Cancelar
@@ -156,9 +185,10 @@ const ClientForm = ({ onClose, onSuccess }: Props) => {
               type="submit"
               variant="contained"
               fullWidth
+              disabled={isLoading}
               className="animate-fade-left duration-normal"
             >
-              Criar Cliente
+              {isLoading ? 'Criando...' : 'Criar Cliente'}
             </Button>
           </div>
         </form>

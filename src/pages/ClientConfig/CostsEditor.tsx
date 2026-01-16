@@ -1,8 +1,7 @@
 // Costs Editor - Edit fixed and variable costs for margin estimation
 
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { updateClient } from '../../store/slices/clientSlice';
 import { Client, BusinessCosts } from '../../types';
 import { Button, TextField, Alert } from '@mui/material';
@@ -14,7 +13,8 @@ interface Props {
 }
 
 const CostsEditor = ({ client }: Props) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => state.loading);
   const existingCosts = client.configuration.costs || {};
 
   const [fixedCosts, setFixedCosts] = useState<number>(existingCosts.fixedCosts || 0);
@@ -83,9 +83,10 @@ const CostsEditor = ({ client }: Props) => {
             variant="contained"
             className="animate-fade-left duration-fast"
             fullWidth
+            disabled={isLoading}
             sx={{ maxWidth: { sm: '200px' } }}
           >
-            Salvar Alterações
+            {isLoading ? 'Salvando...' : 'Salvar Alterações'}
           </Button>
         )}
       </div>

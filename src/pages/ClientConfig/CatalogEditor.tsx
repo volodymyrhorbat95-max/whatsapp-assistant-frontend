@@ -1,8 +1,7 @@
 // Catalog Editor - Edit menu items and prices for all client types
 
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { updateClient } from '../../store/slices/clientSlice';
 import { Client, CatalogCategory, CatalogItem } from '../../types';
 import { Button, TextField, MenuItem, Alert, IconButton } from '@mui/material';
@@ -18,7 +17,8 @@ interface Props {
 }
 
 const CatalogEditor = ({ client }: Props) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => state.loading);
   const [catalog, setCatalog] = useState<CatalogCategory[]>(
     client.configuration.catalog || []
   );
@@ -200,9 +200,10 @@ const CatalogEditor = ({ client }: Props) => {
             variant="contained"
             className="animate-fade-left duration-fast"
             fullWidth
+            disabled={isLoading}
             sx={{ maxWidth: { sm: '200px' } }}
           >
-            Salvar Alterações
+            {isLoading ? 'Salvando...' : 'Salvar Alterações'}
           </Button>
         )}
       </div>
@@ -276,6 +277,7 @@ const CatalogEditor = ({ client }: Props) => {
                 variant="outlined"
                 color="error"
                 size="small"
+                disabled={isLoading}
                 startIcon={<DeleteIcon />}
               >
                 Remover Categoria

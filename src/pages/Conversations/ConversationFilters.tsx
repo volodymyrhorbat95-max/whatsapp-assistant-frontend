@@ -1,4 +1,5 @@
 import { Button, TextField, MenuItem } from '@mui/material';
+import { useAppSelector } from '../../store/hooks';
 
 interface Props {
   startDate: string;
@@ -25,6 +26,8 @@ const ConversationFilters = ({
   onApply,
   onClear
 }: Props) => {
+  const { isLoading } = useAppSelector((state) => state.loading);
+
   return (
     <div className="bg-white border-b border-gray-200 p-3 sm:p-4">
       <div className="grid gap-3 sm:gap-4 @[480px]:grid-cols-2">
@@ -86,8 +89,9 @@ const ConversationFilters = ({
           size="small"
           className="animate-fade-up duration-normal"
           fullWidth
+          disabled={isLoading}
         >
-          Aplicar Filtros
+          {isLoading ? 'Aplicando...' : 'Aplicar Filtros'}
         </Button>
         <Button
           onClick={onClear}
@@ -95,6 +99,7 @@ const ConversationFilters = ({
           size="small"
           className="animate-fade-up duration-light-slow"
           fullWidth
+          disabled={isLoading}
         >
           Limpar
         </Button>

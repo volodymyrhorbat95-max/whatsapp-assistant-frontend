@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchClient } from '../../store/slices/clientSlice';
 import CatalogEditor from './CatalogEditor';
 import MessagesEditor from './MessagesEditor';
@@ -15,16 +14,30 @@ type TabType = 'catalog' | 'messages' | 'hours' | 'payments' | 'costs';
 
 const ClientConfig = () => {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch<AppDispatch>();
-  const { currentClient } = useSelector((state: RootState) => state.client);
+  const dispatch = useAppDispatch();
+  const { currentClient } = useAppSelector((state) => state.client);
+  const { isLoading } = useAppSelector((state) => state.loading);
   const [activeTab, setActiveTab] = useState<TabType>('catalog');
+  const [hasAttemptedLoad, setHasAttemptedLoad] = useState(false);
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchClient(parseInt(id, 10)));
+      dispatch(fetchClient(parseInt(id, 10))).finally(() => {
+        setHasAttemptedLoad(true);
+      });
     }
   }, [id, dispatch]);
 
+  // Show loading state while fetching client
+  if (isLoading || !hasAttemptedLoad) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-gray-600 animate-pulse">Carregando...</div>
+      </div>
+    );
+  }
+
+  // Only show "not found" after load attempt completed
   if (!currentClient) {
     return (
       <div className="flex items-center justify-center min-h-screen">
